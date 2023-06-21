@@ -32,6 +32,11 @@ namespace BudgetCalculator.Data.Services
 
 		}
 
+		public async Task<List<CostCenterEntity>> GetAllCostCentersAsync()
+		{
+			return await _context.CostCenters.Include(item => item.Department).ToListAsync();
+		}
+
 		public async Task<CostCenterEntity> GetCostCenterByIdAsync(int id)
 		{
 			return await _context.CostCenters.Include(item => item.Department).FirstOrDefaultAsync(item=>item.Id==id);

@@ -20,7 +20,7 @@ namespace BudgetCalculator.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var allCostCenters = await _service.GetAllAsync();
+			var allCostCenters = await _service.GetAllCostCentersAsync();
 
 
 
