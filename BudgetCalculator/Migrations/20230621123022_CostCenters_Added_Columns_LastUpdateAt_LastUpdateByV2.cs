@@ -5,7 +5,7 @@
 namespace BudgetCalculator.Migrations
 {
 	/// <inheritdoc />
-	public partial class CostCenters : Migration
+	public partial class CostCenters_Added_Columns_LastUpdateAt_LastUpdateByV2 : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)

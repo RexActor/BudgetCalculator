@@ -3,6 +3,7 @@ using System;
 using BudgetCalculator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetCalculator.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230621144207_DepartmentEntity")]
+    partial class DepartmentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
@@ -29,8 +32,10 @@ namespace BudgetCalculator.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -46,8 +51,6 @@ namespace BudgetCalculator.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("CostCenters");
                 });
@@ -81,17 +84,6 @@ namespace BudgetCalculator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("BudgetCalculator.Models.CostCenterEntity", b =>
-                {
-                    b.HasOne("BudgetCalculator.Models.DepartmentEntity", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
                 });
 #pragma warning restore 612, 618
         }

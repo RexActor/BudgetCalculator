@@ -28,27 +28,31 @@
 
 							<a class="nav-link text-dark dropdown-toggle" href="#" data-bs-toggle="dropdown" id="dropdownMenuLink" role="button" aria-expanded="false"><i class="bi bi-sliders"></i> Management</a>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-								
+
 								<li class="dropdown-header text-center"><span class="fw-bold">Budget</span></li>
-								<li><a class="dropdown-item nav-link" asp-controller="Budget" asp-action="Create" >Create </a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item nav-link" asp-controller="Budget" asp-action="Create">Create </a></li>
 								<li><a class="dropdown-item nav-link">Update </a></li>
 								<li><a class="dropdown-item nav-link" asp-controller="Budget" asp-action="Index">View</a></li>
-								<li><a class="dropdown-item nav-link">Action 4</a></li>
-								<li><hr class="dropdown-divider" /></li>
+
 								
+
 								<li class="dropdown-header text-center"><span class="fw-bold">Users</span></li>
+								<li><hr class="dropdown-divider" /></li>
 								<li><a class="dropdown-item nav-link">Access</a></li>
-								<li><a class="dropdown-item nav-link">Action 2</a></li>
-								<li><a class="dropdown-item nav-link">Action 3</a></li>
-								<li><a class="dropdown-item nav-link">Action 4</a></li>
-								<li><a class="dropdown-item nav-link">Action 5</a></li>
+
+								
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Cost Centers</span></li>
+								<li><hr class="dropdown-divider" /></li>
 								<li><a class="dropdown-item nav-link" asp-action="Index" asp-controller="CostCenter">View</a></li>
-								<li><a class="dropdown-item nav-link">Action 2</a></li>
-								<li><a class="dropdown-item nav-link">Action 3</a></li>
-								<li><a class="dropdown-item nav-link">Action 4</a></li>
-								<li><a class="dropdown-item nav-link">Action 5</a></li>
+								<li><a class="dropdown-item nav-link" asp-action="Create" asp-controller="CostCenter">Create</a></li>
+								
+							
+
+								<li class="dropdown-header text-center"><span class="fw-bold">Departments</span></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item nav-link" asp-action="Index" asp-controller="Departments">Manage Departments</a></li>
 
 							</ul>
 
@@ -58,12 +62,25 @@
 			</div>
 		</nav>
 	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
-			@RenderBody()
-		</main>
+	<div class="row">
+		<div class="col-md-2 d-none d-lg-block">
+			<div class="container">
+				Left Side
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="container ">
+				<main role="main" class="pb-3">
+					@RenderBody()
+				</main>
+			</div>
+		</div>
+		<div class="col-md-2 d-none d-lg-block">
+			<div class="container">
+				Right Side
+			</div>
+		</div>
 	</div>
-
 	<footer class="border-top footer text-muted">
 		<div class="container">
 			&copy; 2023 - BudgetCalculator - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

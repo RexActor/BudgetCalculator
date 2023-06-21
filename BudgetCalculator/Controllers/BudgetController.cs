@@ -1,53 +1,84 @@
-﻿using BudgetCalculator.Models;
+﻿using BudgetCalculator.Data.Services;
+using BudgetCalculator.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace BudgetCalculator.Controllers
 {
-	public class BudgetController : Controller
-	{
-		public IActionResult Index()
-		{
-			return View();
-		}
-
-		public IActionResult Edit()
-		{
-			return View();
-		}
-
-		public IActionResult Create()
-		{
+    public class BudgetController : Controller
+    {
 
 
-
-			List<CostCenters> costCenters = new List<CostCenters>()
-			{
-				new CostCenters{
-					Id=1,Name="12-34-106",Description="Description"
-				},
-				new CostCenters{
-					Id=2,Name="12-34-110",Description="Description"
-				},
-				new CostCenters{
-					Id=13,Name="12-34-100",Description="Description"
-				},
-				new CostCenters{
-					Id=4,Name="12-34-200",Description="Description"
-				},
-			};
+        private readonly IBudgetService _service;
+        public BudgetController(IBudgetService service)
+        {
+            _service = service;
+        }
 
 
-			@ViewBag.Example = new SelectList(costCenters,"Id","Name");
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Create()
+        {
+
+            var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
+            var costCenterList = new List<SelectListItem>();
+            var departments = new List<SelectListGroup>();
+
+            foreach (var dropDown in budgetDropDowns.CostCenters)
+            {
+                if (!departments.Any(item => item.Name == dropDown.Department.ToString()))
+                {
+                    departments.Add(
+                        new SelectListGroup { Name = dropDown.Department.ToString() }
+                        );
+                }
+
+            }
 
 
-			return View();
-		}
+            foreach (var department in departments)
+            {
+                budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+                {
+                    costCenterList.Add(new SelectListItem
+                    {
+                        Value = item.Id.ToString(),
+                        Text = item.Name,
+                        Group =department
+                    });
+                });
+
+          
+            }
 
 
-	}
+            ViewBag.CostCenters = costCenterList;
+
+
+            return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Departments()
+        {
+            return View();
+        }
+
+
+    }
 }

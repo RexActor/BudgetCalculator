@@ -1,0 +1,132 @@
+﻿using BudgetCalculator.Data.Services;
+using BudgetCalculator.Models;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+
+namespace BudgetCalculator.Controllers
+{
+	public class CostCenterController : Controller
+	{
+
+		private readonly ICostCenterService _service;
+
+		public CostCenterController(ICostCenterService service)
+		{
+			_service = service;
+		}
+
+
+		public async Task<IActionResult> Index()
+		{
+			var allCostCenters = await _service.GetAllAsync();
+
+
+
+
+			return View(allCostCenters);
+		}
+
+
+		/// <summary>
+		/// GET View for Cost Center Creation
+		/// </summary>
+		/// <returns></returns>
+
+
+		[HttpGet]
+
+		public async Task<IActionResult> Create()
+		{
+			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
+
+
+			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+			return View();
+
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult> Create(CostCenterEntityVM entity)
+		{
+
+			if (!ModelState.IsValid)
+			{
+
+				var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
+
+
+				ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+				return View(entity);
+			}
+
+		
+
+			await _service.AddNewCostCenterAsync(entity);
+
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+
+		public async Task<IActionResult> Update(int id)
+		{
+			var costService = await _service.GetCostCenterByIdAsync(id);
+
+
+			if (costService == null) { return View("NotFound"); }
+
+			//TODO:USERNAME IS HARDCODED in View Use Dynamic
+
+			var costCenter = new CostCenterEntityVM()
+			{
+				CreatedAt = costService.CreatedAt,
+				DepartmentId = costService.Department.Id,
+				Description = costService.Description,
+				Name = costService.Name,
+				CreatedBy = costService.CreatedBy,
+				LastUpdatedAt = costService.LastUpdatedAt,
+				LastUpdatedBy = costService.LastUpdatedBy,
+				Id = id
+
+			};
+			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
+
+
+			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+
+			return View(costCenter);
+
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult> Update(int id, CostCenterEntityVM entity)
+		{
+
+
+
+			if (!ModelState.IsValid)
+			{
+				var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
+
+
+			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+				return View(entity);
+			}
+
+			if (id != entity.Id) { return View("NotFound"); }
+
+
+
+			await _service.UpdateCostCenterAsync(entity);
+
+
+			return RedirectToAction(nameof(Index));
+		}
+
+	}
+}

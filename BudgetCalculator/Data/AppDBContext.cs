@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BudgetCalculator.Controllers;
+using BudgetCalculator.Models;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetCalculator.Data
 {
@@ -9,5 +12,11 @@ namespace BudgetCalculator.Data
 		{
 
 		}
+
+
+
+		public DbSet<CostCenterEntity> CostCenters { get; set; }
+		public DbSet<DepartmentEntity> Departments { get; set; }
+
 	}
 }

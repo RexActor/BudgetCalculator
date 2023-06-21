@@ -1,4 +1,7 @@
-﻿namespace BudgetCalculator.Data.Base
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace BudgetCalculator.Data.Base
 {
 	public class EntityBaseRepository<T> : IEntityBaseRepository<T> where T : class, IEntityBase, new()
 	{
@@ -12,9 +15,10 @@
 		}
 
 
-		public Task AddAsync(T entity)
+		public async Task AddAsync(T entity)
 		{
-			throw new NotImplementedException();
+			await _context.Set<T>().AddAsync(entity);
+			await _context.SaveChangesAsync();
 		}
 
 		public Task DeleteAsync(int id)
@@ -22,19 +26,25 @@
 			throw new NotImplementedException();
 		}
 
-		public Task<IEnumerable<T>> GetAllAsync()
+		public async Task<IEnumerable<T>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			return await _context.Set<T>().ToListAsync();
+		
 		}
 
-		public Task<T> GetByIdAsync(int id)
+		public async Task<T> GetByIdAsync(int id)
 		{
-			throw new NotImplementedException();
+			return await _context.Set<T>().FirstOrDefaultAsync(item=>item.Id==id);
 		}
 
-		public Task UpdateAsync(int id, T entity)
+		public async Task<T> UpdateAsync(T entity)
 		{
-			throw new NotImplementedException();
+			EntityEntry entityEntry = _context.Entry<T>(entity);
+			entityEntry.State = EntityState.Modified;
+
+			await _context.SaveChangesAsync();
+
+			return entity;
 		}
 	}
 }
