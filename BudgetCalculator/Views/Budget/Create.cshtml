@@ -1,0 +1,108 @@
+﻿@using System.Globalization;
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+	ViewData["Title"] = "Create Budget";
+
+
+
+}
+
+
+<h1>Welcome. Let's create some budgets!</h1>
+
+
+
+<div class="col-md-5 ">
+
+
+	<div class="card">
+
+		<div class="row g-0">
+			<div class="card-header">
+				<h3 class="text-center">Create Budget</h3>
+			</div>
+		</div>
+
+
+		<div class="row g-0">
+
+			<div class="card-body">
+
+				<div class="row">
+
+					<label class=" col-form-label col-3 ">Cost Center</label>
+					<div class="col-auto">
+						<select type="text" class="form-select" asp-items="@ViewBag.Example">
+							<option disabled selected>--SELECT--</option>
+						</select>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="row g-0">
+			<div class="card-body">
+
+				<table class="table table-noborder text-center">
+					<thead>
+						<tr>
+							<td>Month</td>
+							<td>Budget Cases</td>
+							<td>Direct Productive Hours</td>
+							<td>Agency Productive Hours</td>
+						</tr>
+					</thead>
+					<tbody>
+						@for (int i = 1; i <= 12; i++)
+						{
+
+							var monthName = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM", CultureInfo.InvariantCulture);
+
+							<tr>
+
+								<td>@monthName</td>
+								<td><input class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
+								<td><input class="form-control" type="number" placeholder="0" /></td>
+								<td><input class="form-control" type="number" placeholder="0" /></td>
+							</tr>
+
+						}
+
+
+
+
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td colspan="4">
+								<input type="submit" value="Create" class="btn btn-outline-success float-end" />
+								<a class="btn btn-outline-primary float-start" asp-action="Index" asp-asp-controller="Budget">Cancel</a>
+							</td>
+						</tr>
+					</tfoot>
+
+				</table>
+
+			</div>
+		</div>
+
+
+
+		<div class="row g-0">
+			<div class="card-footer">
+				Footer
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+
+
