@@ -21,9 +21,11 @@ namespace BudgetCalculator.Data.Base
 			await _context.SaveChangesAsync();
 		}
 
-		public Task DeleteAsync(int id)
+		public async Task DeleteAsync(int id)
 		{
-			throw new NotImplementedException();
+			var entity = await _context.Set<T>().FirstOrDefaultAsync(item=>item.Id == id);
+			 _context.Set<T>().Remove(entity);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<T>> GetAllAsync()

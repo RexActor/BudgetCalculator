@@ -40,10 +40,10 @@ namespace BudgetCalculator.Controllers
 
             foreach (var dropDown in budgetDropDowns.CostCenters)
             {
-                if (!departments.Any(item => item.Name == dropDown.Department.ToString()))
+                if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
                 {
                     departments.Add(
-                        new SelectListGroup { Name = dropDown.Department.ToString() }
+                        new SelectListGroup { Name = dropDown.Department.Name.ToString() }
                         );
                 }
 

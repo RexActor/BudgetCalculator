@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
+using SQLitePCL;
+
 namespace BudgetCalculator.Controllers
 {
 	public class CostCenterController : Controller
@@ -62,7 +64,7 @@ namespace BudgetCalculator.Controllers
 				return View(entity);
 			}
 
-		
+
 
 			await _service.AddNewCostCenterAsync(entity);
 
@@ -114,7 +116,7 @@ namespace BudgetCalculator.Controllers
 				var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
 
 
-			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+				ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
 				return View(entity);
 			}
 
@@ -126,6 +128,47 @@ namespace BudgetCalculator.Controllers
 
 
 			return RedirectToAction(nameof(Index));
+		}
+
+
+		[HttpGet]
+		public async Task<IActionResult> Delete(int id)
+		{
+
+			var costCenter = await _service.GetCostCenterByIdAsync(id);
+
+
+			var costCenterVM = new CostCenterEntityVM()
+			{
+				DepartmentId = costCenter.DepartmentId,
+				Description = costCenter.Description,
+				CreatedAt = costCenter.CreatedAt,
+				CreatedBy = costCenter.CreatedBy,
+				Id = costCenter.Id,
+				LastUpdatedAt = costCenter.LastUpdatedAt,
+				LastUpdatedBy = costCenter.LastUpdatedBy,
+				Name = costCenter.Name,
+			};
+			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
+
+
+			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
+
+
+			return View(costCenterVM);
+		}
+
+
+		[HttpPost, ActionName("Delete")]
+		public async Task<IActionResult> Confirm(int id)
+		{
+
+			var costCenter = await _service.GetCostCenterByIdAsync(id);
+
+			if (costCenter == null) { return View("NotFound"); }
+			await _service.DeleteAsync(id);
+			return RedirectToAction(nameof(Index));
+
 		}
 
 	}

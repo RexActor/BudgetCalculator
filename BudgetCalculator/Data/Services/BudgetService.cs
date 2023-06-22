@@ -20,7 +20,7 @@ namespace BudgetCalculator.Data.Services
 		{
 			var response = new BudgetDropDownVM()
 			{
-				CostCenters = await _context.CostCenters.ToListAsync()
+				CostCenters = await _context.CostCenters.Include(item=>item.Department).ToListAsync()
 			};
 
 			return response;

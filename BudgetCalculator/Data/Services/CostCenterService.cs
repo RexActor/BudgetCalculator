@@ -60,7 +60,7 @@ namespace BudgetCalculator.Data.Services
 			if(dbcostCenter != null)
 			{
 
-				//dbcostCenter.Department = newCostCenter.Department;
+				dbcostCenter.DepartmentId = newCostCenter.DepartmentId;
 				dbcostCenter.Description= newCostCenter.Description;
 				dbcostCenter.Name = newCostCenter.Name;
 				dbcostCenter.CreatedBy = newCostCenter.CreatedBy;

@@ -1,25 +1,99 @@
-﻿
-@model IEnumerable<DepartmentEntity>;
+﻿@model IEnumerable<DepartmentEntity>;
 
 @*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Departments";
+	ViewData["Title"] = "Departments";
 }
-<h1>Welcome to Departments Main page</h1>
+<h1 class="text-center">Departments</h1>
 
-<a asp-action="Create">Create</a>
+<div class="row">
 
 
-<table>
+	@foreach (var department in Model)
+	{
+		<div class="col-md-3 col-xs-6 mb-3 mt-3">
+			<div class="card">
+				<div class="card-header ">
+					<span class="float-start text-muted " style="font-size:0.6rem;">ID:@department.Id</span>
+					<h3 class="text-center">
+						<span class=" d-inline-block text-truncate" style="max-width:180px;">@department.Name</span>
+						<a class=" float-end  text-danger ms-2" style=" font-size:1.5rem;" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash"></i></a>
+						<a class="float-end  text-success" style=" font-size:1.5rem;" asp-action="Update" asp-route-id="@department.Id"><i class="bi  bi-pencil-square"></i></a>
 
-    @foreach(var department in Model)
-    {
-        <tr>
-            <td>@department.Name</td>
-            <td>@department.Description</td>
-            <td>@department.CreatedDate</td>
-        </tr>
-    }    
-</table>
+
+					</h3>
+
+				</div>
+				<div class="col-md-12">
+
+					<div class="card-body">
+						<table class="table table-borderless">
+							<thead>
+								<tr>
+									<th>Department Name</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td>@department.Name</td>
+
+								</tr>
+								<tr class="border-bottom">
+									<td colspan="2" class="float-start fw-bold">Description:</td>
+								</tr>
+								<tr>
+									<td colspan="2" class="text-center">
+										@department.Description
+									</td>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+					<hr />
+
+
+				</div>
+				<div class="card-footer">
+					<span class="text-muted">Created by: @department.CreatedBy on @department.CreatedDate.Value.ToShortDateString() </span>
+
+					@if (department.LastUpdatedAt != null && department.LastUpdatedBy != null)
+					{
+						<span class="text-muted">Updated by: @department.LastUpdatedBy on @department.LastUpdatedAt.Value.ToShortDateString()</span>
+					}
+
+				</div>
+			</div>
+
+		</div>
+	}
+
+
+</div>
+
+
+
+
+
+
+
+
+@{
+	var controller = ViewContext.RouteData.Values["controller"];
+}
+
+
+@section header{
+
+
+
+	<div class="text-white caption-top">
+		<a asp-controller="@controller" asp-action="Create" class="btn  btn-success"><i class="bi bi-plus-circle"></i> Add New</a>
+	</div>
+}

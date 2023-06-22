@@ -1,0 +1,62 @@
+﻿@model CostCenterEntityVM
+@{
+
+	ViewData["Title"] = "Create Cost Center";
+}
+
+<div class="container w-50">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="text-center">Delete Cost Center</h3>
+				</div>
+				<div class="col-md-12">
+					<form asp-action="Delete" method="post">
+						<div class="card-body">
+							<div class="row m-2">
+								<label asp-for="Name" class="col-form-label"></label>
+								<input asp-for="Name" class="form-control" />
+								<span asp-validation-for="Name" class="text-danger"></span>
+							</div>
+							<div class="row m-2">
+								<label asp-for="Description" class="col-form-label"></label>
+								<input asp-for="Description" class="form-control" />
+								<span asp-validation-for="Description" class="text-danger"></span>
+							</div>
+
+						</div>
+						<div class="row m-2">
+							<label asp-for="DepartmentId" class="col-form-label"></label>
+							<select asp-for="DepartmentId" class="form-select" asp-items="@ViewBag.Departments">
+								<option disabled selected>--SELECT--</option>
+
+
+							</select>
+							<span asp-validation-for="DepartmentId" class="text-danger"></span>
+						</div>
+						<hr />
+						<div class="card-body">
+							<div class="row g-0">
+								<input hidden asp-for="Id" />
+								<input hidden asp-for="CreatedAt" />
+								<input hidden asp-for="CreatedBy" />
+
+								@{
+									//TODO:Requires to update userName
+									<input hidden asp-for="LastUpdatedBy" value="USER_REQUIRED" />
+								}
+								<input type="submit" class="btn btn-sm btn-outline-danger" value="Delete" />
+								<a class="btn btn-sm btn-outline-secondary mt-2" asp-action="Index">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="card-footer">
+					<span class="text-muted">Create Cost Center</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

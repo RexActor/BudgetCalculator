@@ -35,20 +35,20 @@
 								<li><a class="dropdown-item nav-link">Update </a></li>
 								<li><a class="dropdown-item nav-link" asp-controller="Budget" asp-action="Index">View</a></li>
 
-								
+
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Users</span></li>
 								<li><hr class="dropdown-divider" /></li>
 								<li><a class="dropdown-item nav-link">Access</a></li>
 
-								
+
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Cost Centers</span></li>
 								<li><hr class="dropdown-divider" /></li>
 								<li><a class="dropdown-item nav-link" asp-action="Index" asp-controller="CostCenter">View</a></li>
 								<li><a class="dropdown-item nav-link" asp-action="Create" asp-controller="CostCenter">Create</a></li>
-								
-							
+
+
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Departments</span></li>
 								<li><hr class="dropdown-divider" /></li>
@@ -64,12 +64,31 @@
 	</header>
 	<div class="row">
 		<div class="col-md-2 d-none d-lg-block">
-			<div class="container">
-				Left Side
+			<div class="container  position-sticky">
+				@if (IsSectionDefined("header"))
+				{
+					<div class="card">
+						<div class="card-header text-center">
+							<h4>Menu</h4>
+						</div>
+
+						<div class="card-body">
+							<div class="border-5 text-center" style="top:20px;">
+
+
+								@RenderSection("header")
+
+							</div>
+						</div>
+					</div>
+				}
+				
 			</div>
+
+
 		</div>
 		<div class="col-md-8">
-			<div class="container ">
+			<div class="container">
 				<main role="main" class="pb-3">
 					@RenderBody()
 				</main>
