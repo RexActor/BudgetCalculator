@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 *.db
 /BudgetCalculator/Data/AppDBContext.cs
+/BudgetCalculator/appsettings.json
