@@ -23,20 +23,23 @@ namespace BudgetCalculator.Data.Base
 
 		public async Task DeleteAsync(int id)
 		{
-			var entity = await _context.Set<T>().FirstOrDefaultAsync(item=>item.Id == id);
-			 _context.Set<T>().Remove(entity);
-			await _context.SaveChangesAsync();
+			var entity = await _context.Set<T>().FirstOrDefaultAsync(item => item.Id == id);
+			if (entity is not null)
+			{
+				_context.Set<T>().Remove(entity);
+				await _context.SaveChangesAsync();
+			}
 		}
 
 		public async Task<IEnumerable<T>> GetAllAsync()
 		{
 			return await _context.Set<T>().ToListAsync();
-		
+
 		}
 
 		public async Task<T> GetByIdAsync(int id)
 		{
-			return await _context.Set<T>().FirstOrDefaultAsync(item=>item.Id==id);
+			return await _context.Set<T>().FirstOrDefaultAsync(item => item.Id == id);
 		}
 
 		public async Task<T> UpdateAsync(T entity)

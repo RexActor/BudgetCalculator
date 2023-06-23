@@ -8,7 +8,7 @@ using Telegram.Bot.Types;
 
 namespace BudgetCalculator.Data.Services
 {
-	public class TelegramService: IHostedService, IDisposable
+	public class TelegramService : IHostedService, IDisposable
 	{
 		private int executionCount = 0;
 		private readonly ILogger<TelegramService> _logger;
@@ -18,27 +18,27 @@ namespace BudgetCalculator.Data.Services
 
 
 
-		public TelegramService(ILogger<TelegramService> logger,IConfiguration configuration)
+		public TelegramService(ILogger<TelegramService> logger, IConfiguration configuration)
 		{
 			_logger = logger;
 			_configuration = configuration;
-			bot = new TelegramBot(_configuration,logger);
+			bot = new TelegramBot(_configuration, logger);
 			bot.InitializeTelegramBot();
 		}
 
-	
 
-		public  Task StartAsync(CancellationToken cancellationToken)
+
+		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Timed Hosted Service running.");
 
-			 
+
 
 
 			_timer = new Timer(DoWork, null, TimeSpan.Zero,
-				TimeSpan.FromSeconds(5));
+				TimeSpan.FromSeconds(300));
 
-			return   Task.CompletedTask;
+			return Task.CompletedTask;
 
 
 
@@ -47,15 +47,11 @@ namespace BudgetCalculator.Data.Services
 
 		private void DoWork(object? state)
 		{
-			//var count = Interlocked.Increment(ref executionCount);
-
-			//_logger.LogInformation(
-			//	"Timed Hosted Service is working. Count: {Count}", count);
-			//bot.InitializeTelegramBot();
+			_logger.LogInformation($"Monitoring...");
 
 		}
 
-		public Task StopAsync(CancellationToken stoppingToken)
+		public Task StopAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Timed Hosted Service is stopping.");
 
@@ -71,8 +67,8 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task sendMessage(ChatId id, string message)
 		{
-			
-			if(bot.ChannelID is not null)
+
+			if (bot.ChannelID is not null)
 			{
 				await bot.sendMessageAsync(bot.ChannelID, message);
 			}
@@ -81,9 +77,9 @@ namespace BudgetCalculator.Data.Services
 				id = 6166907512;
 				await bot.sendMessageAsync(id, message);
 			}
-			
-			
-			
+
+
+
 		}
 
 

@@ -2,6 +2,7 @@
 using BudgetCalculator.Data.ViewModels;
 using BudgetCalculator.Models;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetCalculator.Data.Services
@@ -10,7 +11,8 @@ namespace BudgetCalculator.Data.Services
 	{
 		private readonly AppDBContext _context;
 
-		public CostCenterService(AppDBContext context) : base(context) {
+		public CostCenterService(AppDBContext context) : base(context)
+		{
 			_context = context;
 		}
 
@@ -19,16 +21,16 @@ namespace BudgetCalculator.Data.Services
 			var createCostCenter = new CostCenterEntity()
 			{
 				CreatedAt = DateTime.Now,
-				CreatedBy=newCostCenter.CreatedBy,
-				Description=newCostCenter.Description,
-				DepartmentId=newCostCenter.DepartmentId,
-				Name=newCostCenter.Name,
+				CreatedBy = newCostCenter.CreatedBy,
+				Description = newCostCenter.Description,
+				DepartmentId = newCostCenter.DepartmentId,
+				Name = newCostCenter.Name,
 
 
 			};
 			await _context.CostCenters.AddAsync(createCostCenter);
 
-			await _context.SaveChangesAsync(); 
+			await _context.SaveChangesAsync();
 
 		}
 
@@ -39,7 +41,13 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task<CostCenterEntity> GetCostCenterByIdAsync(int id)
 		{
-			return await _context.CostCenters.Include(item => item.Department).FirstOrDefaultAsync(item=>item.Id==id);
+			var result = await _context.CostCenters.Include(item => item.Department).FirstOrDefaultAsync(item => item.Id == id);
+
+
+			return result;
+
+
+
 		}
 
 		public async Task<CostCenterDropDownVM> GetCostCenterDropDownValuesAsync()
@@ -54,14 +62,14 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task UpdateCostCenterAsync(CostCenterEntityVM newCostCenter)
 		{
-			var dbcostCenter = _context.CostCenters.FirstOrDefault(item=>item.Id == newCostCenter.Id);
+			var dbcostCenter = _context.CostCenters.FirstOrDefault(item => item.Id == newCostCenter.Id);
 
 
-			if(dbcostCenter != null)
+			if (dbcostCenter is not null)
 			{
 
 				dbcostCenter.DepartmentId = newCostCenter.DepartmentId;
-				dbcostCenter.Description= newCostCenter.Description;
+				dbcostCenter.Description = newCostCenter.Description;
 				dbcostCenter.Name = newCostCenter.Name;
 				dbcostCenter.CreatedBy = newCostCenter.CreatedBy;
 				dbcostCenter.CreatedAt = newCostCenter.CreatedAt;
@@ -70,7 +78,7 @@ namespace BudgetCalculator.Data.Services
 			}
 
 			await _context.SaveChangesAsync();
-			
+
 		}
 	}
 }

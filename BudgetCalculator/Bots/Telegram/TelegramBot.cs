@@ -1,6 +1,7 @@
 ﻿using BudgetCalculator.Data.Services;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using SQLitePCL;
 
@@ -11,7 +12,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BudgetCalculator.Bots.Telegram
 {
@@ -96,15 +97,22 @@ namespace BudgetCalculator.Bots.Telegram
 
 			if (update is null) { return; }
 
+			
+			
 
 			var channelPost = update.ChannelPost;
 			if (channelPost is not null)
 			{
+		
+				
 				var channelPostText = channelPost.Text;
 				var chatId = channelPost.Chat.Id;
 				var channelName = channelPost.Chat.Title;
 				this.ChannelID = chatId;
 				_logger.LogInformation($"Received a '{channelPostText}' message in {channelName} with ID {chatId}");
+			
+				
+				
 				Message sentMessage = await botClient.SendTextMessageAsync(chatId,
 					text: $"AUTHOR! Yeey. I'm a LIVE in CHANNEL {channelName}",
 					cancellationToken: cancellationToken);
@@ -119,11 +127,29 @@ namespace BudgetCalculator.Bots.Telegram
 				var messageText = message.Text;
 				var chatId = message.Chat.Id;
 				
+				var replyMessage = string.Empty;
+
 				_logger.LogInformation($"Received a '{messageText}' message in chat {chatId}");
 
-				Message sentMessage = await botClient.SendTextMessageAsync(chatId,
-					text: $"{message.From?.Username:'NO_USERNAME'}! You are welcome to Budget Calculator. I'm here to work as notification pusher. You will receive any required updates in your Telegram application on phone or desktop computer",
-					cancellationToken: cancellationToken);
+				if (messageText == "/group")
+				{
+
+					var keyboard = new InlineKeyboardMarkup(
+						InlineKeyboardButton.WithUrl("Join!!!", "https://t.me/+abvyOpD-Rsc4ODk0"));
+					Message sentMessage = await botClient.SendTextMessageAsync(chatId, "Please Join private chat for updates\n", replyMarkup: keyboard);
+					
+					
+				}
+				else
+				{
+					replyMessage = $"{message.From?.Username:'NO_USERNAME'}! You are welcome to Budget Calculator. I'm here to work as notification pusher. You will receive any required updates in your Telegram application on phone or desktop computer";
+
+					Message sentMessage = await botClient.SendTextMessageAsync(chatId,
+						text: replyMessage,
+						cancellationToken: cancellationToken);
+				}
+
+				
 
 			}
 

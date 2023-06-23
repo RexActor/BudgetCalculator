@@ -55,7 +55,7 @@ namespace BudgetCalculator.Controllers
 		{
 			var department = await _service.GetByIdAsync(id);
 
-			if (department == null) { return View("NotFound"); }
+			if (department is null) { return View("NotFound"); }
 			return View(department);
 		}
 
@@ -86,7 +86,7 @@ namespace BudgetCalculator.Controllers
 		{
 			var department = await _service.GetByIdAsync(id);
 
-			if (department == null) { return View("NotFound"); }
+			if (department is null) { return View("NotFound"); }
 
 
 			return View(department);
@@ -98,7 +98,7 @@ namespace BudgetCalculator.Controllers
 		{
 			var department = await _service.GetByIdAsync(id);
 
-			if (department == null) { return View("NotFound"); }
+			if (department is null) { return View("NotFound"); }
 
 			await _service.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));

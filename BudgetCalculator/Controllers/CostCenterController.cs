@@ -85,7 +85,7 @@ namespace BudgetCalculator.Controllers
 			var costService = await _service.GetCostCenterByIdAsync(id);
 
 
-			if (costService == null) { return View("NotFound"); }
+			if (costService is null) { return View("NotFound"); }
 
 			//TODO:USERNAME IS HARDCODED in View Use Dynamic
 
@@ -171,7 +171,7 @@ namespace BudgetCalculator.Controllers
 
 			var costCenter = await _service.GetCostCenterByIdAsync(id);
 
-			if (costCenter == null) { return View("NotFound"); }
+			if (costCenter is null) { return View("NotFound"); }
 			await _service.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));
 
