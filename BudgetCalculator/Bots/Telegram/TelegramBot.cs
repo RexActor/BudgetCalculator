@@ -23,7 +23,7 @@ namespace BudgetCalculator.Bots.Telegram
 		public ChatId ChannelID { get; set; }
 		
 
-		private Boolean group = false;
+		
 
 
 		public TelegramBot(IConfiguration configuration, ILogger<TelegramService> logger)
@@ -50,14 +50,14 @@ namespace BudgetCalculator.Bots.Telegram
 				cancellationToken: cts.Token);
 
 			var me = await botClient.GetMeAsync();
-			//Console.WriteLine($"Start listening for @{me.Username}");
+			
 			_logger.LogInformation($"Start listening for @{me.Username}");
 
 		}
 
 		public async Task sendMessageAsync(ChatId chatID, string message)
 		{
-			//chatID = 6166907512;
+			
 			await botClient.SendTextMessageAsync(chatID, message);
 
 		}
@@ -122,7 +122,7 @@ namespace BudgetCalculator.Bots.Telegram
 				_logger.LogInformation($"Received a '{messageText}' message in chat {chatId}");
 
 				Message sentMessage = await botClient.SendTextMessageAsync(chatId,
-					text: $"{message.From?.Username:'NA'}! You are welcome to Budget Calculator. I'm here to work as notification pusher. You will receive any required updates in your Telegram application on phone or desktop computer",
+					text: $"{message.From?.Username:'NO_USERNAME'}! You are welcome to Budget Calculator. I'm here to work as notification pusher. You will receive any required updates in your Telegram application on phone or desktop computer",
 					cancellationToken: cancellationToken);
 
 			}
