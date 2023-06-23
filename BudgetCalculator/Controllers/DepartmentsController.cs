@@ -1,4 +1,5 @@
-﻿using BudgetCalculator.Data.Services;
+﻿using BudgetCalculator.Bots.Telegram;
+using BudgetCalculator.Data.Services;
 using BudgetCalculator.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +10,21 @@ namespace BudgetCalculator.Controllers
 	{
 
 		private readonly IDepartmentService _service;
-		public DepartmentsController(IDepartmentService service)
+		private readonly TelegramService _telegramService;
+		
+		public DepartmentsController(IDepartmentService service, TelegramService telegramService)
 		{
 			_service = service;
-
+			_telegramService = telegramService;
+			
+			
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			var departments = await _service.GetAllAsync();
+			//await bot.sendMessageAsync(1, "Someone Access Index PAge");
+			
 
 			return View(departments);
 		}
@@ -58,7 +65,11 @@ namespace BudgetCalculator.Controllers
 			if (id == entity.Id)
 			{
 				await _service.UpdateAsync(entity);
+
+				await _telegramService.sendMessage(1, $"User Updated {entity} ");
+
 				return RedirectToAction(nameof(Index));
+
 			}
 
 			return View("NotFound");
