@@ -10,12 +10,14 @@ namespace BudgetCalculator.Controllers
 	{
 
 		private readonly IDepartmentService _service;
-		private readonly TelegramService _telegramService;
+		//private readonly TelegramService _telegramService;
 		
-		public DepartmentsController(IDepartmentService service, TelegramService telegramService)
+		public DepartmentsController(IDepartmentService service)
 		{
+
+			//TelegramService telegramService
 			_service = service;
-			_telegramService = telegramService;
+			//_telegramService = telegramService;
 			
 			
 		}
@@ -66,7 +68,10 @@ namespace BudgetCalculator.Controllers
 			{
 				await _service.UpdateAsync(entity);
 
-				await _telegramService.sendMessage(1, $"User Updated {entity} ");
+
+
+
+				//await _telegramService.sendMessage(1, $"User Updated Department  - > {entity.Name} ");
 
 				return RedirectToAction(nameof(Index));
 

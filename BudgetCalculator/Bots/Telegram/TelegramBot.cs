@@ -1,6 +1,10 @@
 ﻿using BudgetCalculator.Data.Services;
 
+using Microsoft.AspNetCore.Components;
+
 using SQLitePCL;
+
+using System;
 
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -16,7 +20,11 @@ namespace BudgetCalculator.Bots.Telegram
 		private readonly IConfiguration _configuration;
 		TelegramBotClient botClient;
 		private readonly ILogger<TelegramService> _logger;
+		public ChatId ChannelID { get; set; }
 		
+
+		private Boolean group = false;
+
 
 		public TelegramBot(IConfiguration configuration, ILogger<TelegramService> logger)
 		{
@@ -49,31 +57,86 @@ namespace BudgetCalculator.Bots.Telegram
 
 		public async Task sendMessageAsync(ChatId chatID, string message)
 		{
-			chatID = 6166907512;
+			//chatID = 6166907512;
 			await botClient.SendTextMessageAsync(chatID, message);
+
 		}
+
+
+		
 
 
 
 		public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
 		{
-			if (update.Message is not { } message)
+
+			#region THIS DON@T WORK BECAUSE ALWAYS ONE WILL BE "TRUE" AND WILL EXIT FUNCTION
+
+			//if(update.ChannelPost is not { } channelPost || update.Message is not { } message)
+			//{
+			//	return;
+			//}
+			//if(channelPost.Text is not { } channelPostText || message.Text is not { } messageText)
+			//{
+			//	return;
+			//}
+
+			#endregion
+
+
+			#region DIFFERENT APPROACH
+			///CHECK IF UPDATE IS NULL, IF IS NULL - RETURN
+			///IF UPDATE IS NOT NULL CONTINUE TO CHECK IF UPDATE IS FROM CHANNEL POST
+			///IF UPDATE IS FROM CHANNEL POST IT ENTERS IF STATEMENT AND DISPLAY RECEIVED MESSAGE IN LOGGER
+			///
+			/// IF UPDATE IS NOT FROM CHANNEL IT CHECKS IF UPDATE IS DIRECT MESSAGE 
+			/// IF UPDATE IS DIRECT MESSAGE IT ENTERS IF STATEMENT AND DISPLAYS RECEIVED MESSAGE IN LOGGER
+
+
+
+			if (update is null) { return; }
+
+
+			var channelPost = update.ChannelPost;
+			if (channelPost is not null)
 			{
-				return;
+				var channelPostText = channelPost.Text;
+				var chatId = channelPost.Chat.Id;
+				var channelName = channelPost.Chat.Title;
+				this.ChannelID = chatId;
+				_logger.LogInformation($"Received a '{channelPostText}' message in {channelName} with ID {chatId}");
+				Message sentMessage = await botClient.SendTextMessageAsync(chatId,
+					text: $"AUTHOR! Yeey. I'm a LIVE in CHANNEL {channelName}",
+					cancellationToken: cancellationToken);
 			}
-			if (message.Text is not { } messageText)
+
+
+
+			var message = update.Message;
+
+			if (message is not null)
 			{
-				return;
+				var messageText = message.Text;
+				var chatId = message.Chat.Id;
+				
+				_logger.LogInformation($"Received a '{messageText}' message in chat {chatId}");
+
+				Message sentMessage = await botClient.SendTextMessageAsync(chatId,
+					text: $"{message.From?.Username:'NA'}! You are welcome to Budget Calculator. I'm here to work as notification pusher. You will receive any required updates in your Telegram application on phone or desktop computer",
+					cancellationToken: cancellationToken);
+
 			}
 
-			var chatId = message.Chat.Id;
 
-			//Console.WriteLine($"Received a '{messageText}' message in chat {chatId}");
-			_logger.LogInformation($"Received a '{messageText}' message in chat {chatId}");
+			#endregion
 
-			Message sentMessage = await botClient.SendTextMessageAsync(chatId,
-				text: "You are welcome to Budget Calculator",
-				cancellationToken: cancellationToken);
+
+
+
+
+
+
+
 
 		}
 

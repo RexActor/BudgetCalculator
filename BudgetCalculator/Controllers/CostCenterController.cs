@@ -4,6 +4,7 @@ using BudgetCalculator.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.VisualBasic;
 
 using SQLitePCL;
 
@@ -13,10 +14,14 @@ namespace BudgetCalculator.Controllers
 	{
 
 		private readonly ICostCenterService _service;
+		private readonly TelegramService _telegramService;
 
-		public CostCenterController(ICostCenterService service)
+		public CostCenterController(ICostCenterService service, TelegramService telegramService)
 		{
+			//, TelegramService telegramService
 			_service = service;
+			_telegramService = telegramService;
+			//_telegramService = telegramService;
 		}
 
 
@@ -65,6 +70,7 @@ namespace BudgetCalculator.Controllers
 			}
 
 
+			await _telegramService.sendMessage(1, $"Cost Center {entity.Name} was created!\nDescription: {entity.Description}\nCreated On: {DateTime.Now.Date.ToShortDateString()}\nAt: {DateTime.Now.ToShortTimeString()}\nBy: {entity.CreatedBy} ");
 
 			await _service.AddNewCostCenterAsync(entity);
 

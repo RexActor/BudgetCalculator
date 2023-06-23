@@ -28,17 +28,17 @@ namespace BudgetCalculator.Data.Services
 
 	
 
-		public Task StartAsync(CancellationToken cancellationToken)
+		public  Task StartAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Timed Hosted Service running.");
 
+			 
 
-			
 
 			_timer = new Timer(DoWork, null, TimeSpan.Zero,
 				TimeSpan.FromSeconds(5));
 
-			return  Task.CompletedTask;
+			return   Task.CompletedTask;
 
 
 
@@ -71,8 +71,19 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task sendMessage(ChatId id, string message)
 		{
-			id = 6166907512;
-			await bot.sendMessageAsync(id, message);
+			
+			if(bot.ChannelID is not null)
+			{
+				await bot.sendMessageAsync(bot.ChannelID, message);
+			}
+			else
+			{
+				id = 6166907512;
+				await bot.sendMessageAsync(id, message);
+			}
+			
+			
+			
 		}
 
 
