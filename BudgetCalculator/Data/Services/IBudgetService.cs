@@ -10,6 +10,7 @@ namespace BudgetCalculator.Data.Services
 		Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync();
 		Task CreateBudget(BudgetEntityVM entity);
 		Task UpdateBudget(BudgetEntityVM entity);
-		Task<BudgetEntityVM> GetByYearAsync(int year);
+		Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year,int costCenterId);
+		Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync();
 	}
 }

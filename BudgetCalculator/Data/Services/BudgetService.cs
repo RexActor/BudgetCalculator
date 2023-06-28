@@ -52,6 +52,17 @@ namespace BudgetCalculator.Data.Services
 
 		}
 
+		public async Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync()
+		{
+			
+			var budgetList = new List<BudgetEntity>();
+
+			var result = await _context.Budgets.Include(item => item.CostCenter).GroupBy(c=>c.CostCenter).Select(item=>item.First()).ToListAsync();
+
+
+			return result;
+		}
+
 		public async Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync()
 		{
 			var response = new BudgetDropDownVM()
@@ -62,9 +73,9 @@ namespace BudgetCalculator.Data.Services
 			return response;
 		}
 
-		public async Task<BudgetEntityVM> GetByYearAsync(int year)
+		public async Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year, int costCenterId)
 		{
-			var budgetDB = await _context.Budgets.Include(item => item.CostCenter).Where(item => item.Year == year).ToListAsync();
+			var budgetDB = await _context.Budgets.Include(item => item.CostCenter).Where(item => (item.Year == year) && (item.CostCenter.Id==costCenterId)).ToListAsync();
 
 			List<MonthBudget> monthBudget = new List<MonthBudget>();
 

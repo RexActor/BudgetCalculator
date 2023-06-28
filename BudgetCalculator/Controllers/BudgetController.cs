@@ -23,15 +23,21 @@ namespace BudgetCalculator.Controllers
 		}
 
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
+		{
+
+			var budgets = await _service.GetAllBudgetsAsync();
+
+
+			return View(budgets);
+		}
+
+		public IActionResult Weekly()
 		{
 			return View();
 		}
 
-		public IActionResult Edit()
-		{
-			return View();
-		}
+
 
 		[HttpGet]
 		public async Task<IActionResult> Create()
@@ -100,25 +106,28 @@ namespace BudgetCalculator.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		//GET:update/{year}
+		//GET:update/year={year}&CostCenter={costCenter}
 		[HttpGet]
-		public async Task<IActionResult> Update(int year)
+		public async Task<IActionResult> Update(int year, int costCenter)
 		{
-			var budgetList = await _service.GetByYearAsync(year);
+			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenter);
 
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 			var costCenterList = new List<SelectListItem>();
 			var departments = new List<SelectListGroup>();
 
-			foreach (var dropDown in budgetDropDowns.CostCenters)
+			if (budgetDropDowns.CostCenters is not null)
 			{
-				if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+				foreach (var dropDown in budgetDropDowns.CostCenters)
 				{
-					departments.Add(
-						new SelectListGroup { Name = dropDown.Department.Name.ToString() }
-						);
-				}
+					if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+					{
+						departments.Add(
+							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+							);
+					}
 
+				}
 			}
 
 
