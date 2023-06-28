@@ -5,8 +5,11 @@ using BudgetCalculator.Models;
 
 namespace BudgetCalculator.Data.Services
 {
-	public interface IBudgetService:IEntityBaseRepository<BudgetEntity>
+	public interface IBudgetService : IEntityBaseRepository<BudgetEntity>
 	{
 		Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync();
+		Task CreateBudget(BudgetEntityVM entity);
+		Task UpdateBudget(BudgetEntityVM entity);
+		Task<BudgetEntityVM> GetByYearAsync(int year);
 	}
 }

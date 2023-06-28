@@ -3,6 +3,7 @@ using System;
 using BudgetCalculator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetCalculator.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230628093905_BudgetEntity")]
+    partial class BudgetEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
@@ -29,8 +32,9 @@ namespace BudgetCalculator.Migrations
                     b.Property<int>("Cases")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CostCenterId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("CostCenter")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("DirectProductiveHours")
                         .HasColumnType("INTEGER");
@@ -43,8 +47,6 @@ namespace BudgetCalculator.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CostCenterId");
 
                     b.ToTable("Budgets");
                 });
@@ -113,17 +115,6 @@ namespace BudgetCalculator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("BudgetCalculator.Models.BudgetEntity", b =>
-                {
-                    b.HasOne("BudgetCalculator.Models.CostCenterEntity", "CostCenter")
-                        .WithMany()
-                        .HasForeignKey("CostCenterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CostCenter");
                 });
 
             modelBuilder.Entity("BudgetCalculator.Models.CostCenterEntity", b =>

@@ -1,8 +1,71 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using BudgetCalculator.Finance.Calendar;
+@using System.Globalization;
+@{
+	ViewData["Title"] = "Home Page";
+
+	var year = 2022;
+	var maxYear = 2030;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+	<H1>Number of Weeks per Month/Year</H1>
 </div>
+
+@*
+<table class="table table-borderless">
+
+	@for (int i = 2023; i <= 2025; i++)
+	{
+		<tr>
+			<th>@i</th>
+		</tr>
+		@for (int x = 1; x <= 12; x++)
+		{
+			<tr>
+				<td>
+					@{
+						var month = new DateTime(i, x, 1).ToString("MMM", CultureInfo.InvariantCulture);
+					}
+					<p> @month have @FinanceCalendar.GetWeeksPerMonth(i, x) weeks</p>
+				</td>
+			</tr>
+		}
+
+	}
+
+
+</table>*@
+
+<table class="table table-bordered text-center">
+
+	<tr class="table-dark">
+		<th>Month</th>
+		@for (int i = year; i <= maxYear; i++)
+		{
+			<th>@i</th>
+		}
+	</tr>
+
+	@for (int x = 1; x <= 12; x++)
+	{
+		var nextYear = year;
+		var month = new DateTime(nextYear, x, 1).ToString("MMMM", CultureInfo.InvariantCulture);
+		<tr>
+			<td class="table-dark fw-bold">@month</td>
+			
+			@for (int y = nextYear; y <= maxYear; y++)
+			{
+				//@FinanceCalendar.FinanceCalendarWeekModel.TryGetValue(month,out int val)
+				<td class="table-success border-1 border-bottom border-dark">
+					<p>Dynamic: @FinanceCalendar.GetWeeksPerMonth(y, x)</p>
+					
+					<p>Fixed: @FinanceCalendar.FinanceCalendarWeekModel[month]</p>
+					</td>
+
+			}
+		</tr>
+	}
+
+
+</table>

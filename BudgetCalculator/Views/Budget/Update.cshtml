@@ -14,18 +14,18 @@
 }
 
 
-<h1>Welcome. Let's create some budgets!</h1>
+<h1>Welcome. Let's Update some budgets!</h1>
 
 
-<form asp-action="Create" method="post">
+<form asp-action="Update" method="post">
 	<div class="col-md-5 ">
-
+		
 
 		<div class="card">
 
 			<div class="row g-0">
 				<div class="card-header">
-					<h3 class="text-center">Create Budget</h3>
+					<h3 class="text-center">Update Budget</h3>
 				</div>
 			</div>
 
@@ -71,28 +71,27 @@
 						<tbody>
 
 
-
-							@for (int i = 1; i <= 12; i++)
+							@for (int i = 0; i < Model.MonthBudgets.Count; i++)
 							{
-
-								var monthName = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM", CultureInfo.InvariantCulture);
-
-
-
 
 								<tr>
 
 
 									<td>
-										<label asp-for="MonthBudgets[i-1].MonthName" value="@monthName">@monthName</label>
-										<input hidden asp-for="MonthBudgets[i-1].MonthName" value="@monthName" />
+										<label asp-for="MonthBudgets[i].MonthName" value="@Model.MonthBudgets[i].MonthName">@Model.MonthBudgets[i].MonthName</label>
+										<input hidden asp-for="MonthBudgets[i].MonthName" value="@Model.MonthBudgets[i].MonthName" />
+										<input hidden asp-for="MonthBudgets[i].Id" value="@Model.MonthBudgets[i].Id"/>
 									</td>
-									<td><input asp-for="MonthBudgets[i-1].Cases" class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
-									<td><input asp-for="MonthBudgets[i-1].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
-									<td><input asp-for="MonthBudgets[i-1].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
+									<td><input asp-for="MonthBudgets[i].Cases" class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
+									<td><input asp-for="MonthBudgets[i].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
+									<td><input asp-for="MonthBudgets[i].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 								</tr>
 							}
-							}
+
+
+
+
+
 
 
 
@@ -102,7 +101,7 @@
 						<tfoot>
 							<tr>
 								<td colspan="4">
-									<input type="submit" value="Create" class="btn btn-outline-success float-end" />
+									<input type="submit" value="Update" class="btn btn-outline-primary float-end" />
 									<a class="btn btn-outline-secondary float-start" asp-action="Index" asp-asp-controller="Budget">Cancel</a>
 								</td>
 							</tr>

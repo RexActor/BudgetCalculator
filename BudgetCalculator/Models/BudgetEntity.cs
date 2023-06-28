@@ -8,5 +8,13 @@ namespace BudgetCalculator.Models
 	{
 		[Key]
 		public int Id { get; set; }
+
+		public string MonthName { get; set; }
+		public CostCenterEntity CostCenter { get; set; }
+
+		public int Cases { get; set; }
+		public int DirectProductiveHours { get; set; }
+		public int AgencyProductiveHours { get; set; }
+		public int Year { get; set; }
 	}
 }
