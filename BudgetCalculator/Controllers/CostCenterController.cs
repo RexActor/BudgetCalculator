@@ -18,20 +18,16 @@ namespace BudgetCalculator.Controllers
 
 		public CostCenterController(ICostCenterService service, TelegramService telegramService)
 		{
-			//, TelegramService telegramService
+		
 			_service = service;
 			_telegramService = telegramService;
-			//_telegramService = telegramService;
+			
 		}
 
 
 		public async Task<IActionResult> Index()
 		{
 			var allCostCenters = await _service.GetAllCostCentersAsync();
-
-
-
-
 			return View(allCostCenters);
 		}
 
@@ -47,11 +43,8 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Create()
 		{
 			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
-
-
 			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
 			return View();
-
 		}
 
 
@@ -61,10 +54,7 @@ namespace BudgetCalculator.Controllers
 
 			if (!ModelState.IsValid)
 			{
-
 				var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
-
-
 				ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
 				return View(entity);
 			}
@@ -73,8 +63,6 @@ namespace BudgetCalculator.Controllers
 			await _telegramService.sendMessage(1, $"Cost Center {entity.Name} was created!\nDescription: {entity.Description}\nCreated On: {DateTime.Now.Date.ToShortDateString()}\nAt: {DateTime.Now.ToShortTimeString()}\nBy: {entity.CreatedBy} ");
 
 			await _service.AddNewCostCenterAsync(entity);
-
-
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -83,9 +71,9 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Update(int id)
 		{
 			var costService = await _service.GetCostCenterByIdAsync(id);
-
-
-			if (costService is null) { return View("CustomError"); }
+			if (costService is null) {
+				return View("CustomError",$"Couldn't find Cost Center with ID: {id}");
+			}
 
 			//TODO:USERNAME IS HARDCODED in View Use Dynamic
 
@@ -102,37 +90,25 @@ namespace BudgetCalculator.Controllers
 
 			};
 			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
-
-
 			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
-
 			return View(costCenter);
-
 		}
 
 
 		[HttpPost]
 		public async Task<IActionResult> Update(int id, CostCenterEntityVM entity)
 		{
-
-
-
 			if (!ModelState.IsValid)
 			{
 				var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
-
-
 				ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
 				return View(entity);
 			}
 
-			if (id != entity.Id) { return View("CustomError"); }
-
-
-
+			if (id != entity.Id) {
+				return View("CustomError",$"Can't update {entity.Name} as ID's don't match!");
+			}
 			await _service.UpdateCostCenterAsync(entity);
-
-
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -140,10 +116,7 @@ namespace BudgetCalculator.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(int id)
 		{
-
 			var costCenter = await _service.GetCostCenterByIdAsync(id);
-
-
 			var costCenterVM = new CostCenterEntityVM()
 			{
 				DepartmentId = costCenter.DepartmentId,
@@ -156,11 +129,7 @@ namespace BudgetCalculator.Controllers
 				Name = costCenter.Name,
 			};
 			var departmentDropDowns = await _service.GetCostCenterDropDownValuesAsync();
-
-
 			ViewBag.Departments = new SelectList(departmentDropDowns.Departments, "Id", "Name");
-
-
 			return View(costCenterVM);
 		}
 
@@ -168,10 +137,10 @@ namespace BudgetCalculator.Controllers
 		[HttpPost, ActionName("Delete")]
 		public async Task<IActionResult> Confirm(int id)
 		{
-
 			var costCenter = await _service.GetCostCenterByIdAsync(id);
-
-			if (costCenter is null) { return View("CustomError"); }
+			if (costCenter is null) {
+				return View("CustomError",$"Couldn't find Cost Center with ID: {id}"); 
+			}
 			await _service.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));
 

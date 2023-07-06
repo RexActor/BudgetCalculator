@@ -15,8 +15,6 @@ namespace BudgetCalculator.Controllers
 {
 	public class BudgetController : Controller
 	{
-
-
 		private readonly IBudgetService _service;
 		public BudgetController(IBudgetService service)
 		{
@@ -26,10 +24,7 @@ namespace BudgetCalculator.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-
 			var budgets = await _service.GetAllBudgetsAsync();
-
-
 			return View(budgets);
 		}
 
@@ -44,7 +39,6 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Create()
 		{
 			var budgetList = new BudgetEntityVM();
-
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 			var costCenterList = new List<SelectListItem>();
 			var departments = new List<SelectListGroup>();
@@ -57,9 +51,7 @@ namespace BudgetCalculator.Controllers
 						new SelectListGroup { Name = dropDown.Department.Name.ToString() }
 						);
 				}
-
 			}
-
 
 			foreach (var department in departments)
 			{
@@ -72,8 +64,6 @@ namespace BudgetCalculator.Controllers
 						Group = department
 					});
 				});
-
-
 			}
 
 			foreach (var month in FinanceCalendar.FinanceCalendarWeekModel.Keys)
@@ -88,11 +78,7 @@ namespace BudgetCalculator.Controllers
 				});
 			}
 
-
-
 			ViewBag.CostCenters = costCenterList;
-
-
 			return View(budgetList);
 		}
 
@@ -102,29 +88,24 @@ namespace BudgetCalculator.Controllers
 
 
 			var budgetDb = await _service.GetByYearAndCostCenterAsync(budget.Year, budget.CostCenterId);
-		
-			if(budgetDb is not null) { return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}"); }
 
+			if (budgetDb is not null) {
+				return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}");
+			}
 
 			await _service.CreateBudget(budget);
-
-
 			return RedirectToAction(nameof(Index));
 		}
 
-		//GET:update/year={year}&CostCenter={costCenter}
+		//GET:update?year={year}&CostCenter={costCenter}
 		[HttpGet]
 		public async Task<IActionResult> Update(int year, int costCenterId)
 		{
-			
-
-			
 
 			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
-
-			if(!budgetList.MonthBudgets.Any())
+			if (!budgetList.MonthBudgets.Any())
 			{
-				return View("CustomError",$"We couldn't locate budget for Cost Center with ID: {costCenterId} and Year: {year}");
+				return View("CustomError", $"We couldn't locate budget for Cost Center with ID: {costCenterId} and Year: {year}");
 			}
 
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
@@ -141,10 +122,8 @@ namespace BudgetCalculator.Controllers
 							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
 							);
 					}
-
 				}
 			}
-
 
 			foreach (var department in departments)
 			{
@@ -157,35 +136,81 @@ namespace BudgetCalculator.Controllers
 						Group = department
 					});
 				});
-
-
 			}
-
-
-
-
-
 			ViewBag.CostCenters = costCenterList;
-
-
 			return View(budgetList);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Update(BudgetEntityVM budget)
 		{
-			
-
 			await _service.UpdateBudget(budget);
-
-
 			return RedirectToAction(nameof(Index));
 		}
-		//GET:update/year={year}&CostCenter={costCenter}
+
+		//GET:Delete?year={year}&CostCenter={costCenter}
 		[HttpGet]
-		public async Task<IActionResult> Delete(int year,int costCenterId)
+		public async Task<IActionResult> Delete(int year, int costCenterId)
 		{
 			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
+			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
+			var costCenterList = new List<SelectListItem>();
+			var departments = new List<SelectListGroup>();
+
+			if (budgetDropDowns.CostCenters is not null)
+			{
+				foreach (var dropDown in budgetDropDowns.CostCenters)
+				{
+					if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+					{
+						departments.Add(
+							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+							);
+					}
+				}
+			}
+
+			foreach (var department in departments)
+			{
+				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				{
+					costCenterList.Add(new SelectListItem
+					{
+						Value = item.Id.ToString(),
+						Text = item.Name,
+						Group = department
+					});
+				});
+			}
+			ViewBag.CostCenters = costCenterList;
+			return View(budgetList);
+		}
+
+		[HttpPost, ActionName("Delete")]
+
+		public async Task<IActionResult> DeleteConfirm(int year, int costCenterId)
+		{
+			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
+			if (!budgetList.MonthBudgets.Any())
+			{
+				return View("CustomError", $"We couldn't locate Budget for {year} with Cost Center ID {costCenterId}");
+			}
+			await _service.DeleteBudgetAsync(year, costCenterId);
+			return RedirectToAction(nameof(Index));
+		}
+
+
+		//GET:view?year={year}&CostCenter={costCenter}
+		[HttpGet]
+		public async Task<IActionResult> View(int year, int costCenterId)
+		{
+
+			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
+
+			if (!budgetList.MonthBudgets.Any())
+			{
+				return View("CustomError", $"We couldn't locate budget for Cost Center with ID: {costCenterId} and Year: {year}");
+			}
 
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 			var costCenterList = new List<SelectListItem>();
@@ -201,10 +226,8 @@ namespace BudgetCalculator.Controllers
 							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
 							);
 					}
-
 				}
 			}
-
 
 			foreach (var department in departments)
 			{
@@ -218,32 +241,12 @@ namespace BudgetCalculator.Controllers
 					});
 				});
 
-
 			}
 
-
-
-
-
 			ViewBag.CostCenters = costCenterList;
-
-
 			return View(budgetList);
 		}
 
-		[HttpPost,ActionName("Delete")]
-
-		public async Task<IActionResult> DeleteConfirm(int year, int costCenterId)
-		{
-
-			//	var budgetList = await _service.GetByYearAndCostCenterAsync(year,costCenterId);
-
-			//if (budgetList is null) { return View("CustomError"); }
-			await _service.DeleteBudgetAsync(year,costCenterId);
-			return RedirectToAction(nameof(Index));
-
-			
-		}
 
 	}
 }

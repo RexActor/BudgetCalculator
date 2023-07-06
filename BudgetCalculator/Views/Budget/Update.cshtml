@@ -25,7 +25,12 @@
 
 			<div class="row g-0">
 				<div class="card-header">
-					<h3 class="text-center">Update Budget</h3>
+					<h3 class="text-center">
+						Update Budget
+						<a class="text-danger float-end text-decoration-none h4 " asp-action="Index"><i class="bi bi-list-task me-2"></i><span class="h5">Return</span></a>
+						
+
+					</h3>
 				</div>
 			</div>
 
@@ -103,7 +108,7 @@
 								<td colspan="4">
 									
 									<input type="submit" value="Update" class="btn btn-outline-primary float-end" />
-									<a class="btn btn-outline-secondary float-start" asp-action="Index" asp-asp-controller="Budget">Cancel</a>
+									<a class="btn btn-outline-secondary float-start" asp-action="View" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId">Cancel</a>
 								</td>
 							</tr>
 						</tfoot>

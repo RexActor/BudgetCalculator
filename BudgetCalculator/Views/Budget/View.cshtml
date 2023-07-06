@@ -7,17 +7,17 @@
 *@
 @{
 
-	ViewData["Title"] = "Delete Budget";
+	ViewData["Title"] = "View Budget";
 
 
 
 }
 
 
-<h1>Welcome. Let's Delete some budgets!</h1>
+<h1>Welcome. Let's View some budgets!</h1>
 
 
-<form asp-action="Delete" method="post">
+
 	<div class="col-md-5 ">
 		
 
@@ -25,12 +25,11 @@
 
 			<div class="row g-0">
 				<div class="card-header">
-					<h3 class="text-center">
-						Update Budget
-						<a class="text-danger float-end text-decoration-none h4 " asp-action="Index"><i class="bi bi-list-task me-2"></i><span class="h5">Return</span></a>
-
-
-					</h3>
+					<h3 class="text-center">Update Budget
+					<a class="text-danger float-end " asp-action="Delete" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId"><i class="bi bi-trash-fill"></i></a>
+					<a class="text-primary float-end me-3" asp-action="Update" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId"><i class="bi bi-pencil-square"></i></a>
+					
+				</h3>
 				</div>
 			</div>
 
@@ -88,7 +87,7 @@
 										<input hidden asp-for="MonthBudgets[i].Id" value="@Model.MonthBudgets[i].Id"/>
 									</td>
 									<td><input readonly asp-for="MonthBudgets[i].Cases" class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
-									<td><input readonly asp-for="MonthBudgets[i].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
+									<td><input readonly  asp-for="MonthBudgets[i].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 									<td><input readonly asp-for="MonthBudgets[i].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 								</tr>
 							}
@@ -107,11 +106,8 @@
 							<tr>
 								<td colspan="4">
 									
-									<input hidden asp-for="Id"  />
-									<input hidden asp-for="CostCenterId" />
-									<input  type="submit" value="Delete" class="btn btn-outline-danger float-end" />
-
-									<a class="btn btn-outline-secondary float-start" asp-action="View" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId">Cancel</a>
+									
+									<a class="btn btn-outline-secondary float-start" asp-action="Index" asp-asp-controller="Budget">Return to List</a>
 								</td>
 							</tr>
 						</tfoot>
@@ -134,5 +130,3 @@
 
 	</div>
 
-
-</form>

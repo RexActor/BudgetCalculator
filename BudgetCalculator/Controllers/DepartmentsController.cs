@@ -10,24 +10,16 @@ namespace BudgetCalculator.Controllers
 	{
 
 		private readonly IDepartmentService _service;
-		//private readonly TelegramService _telegramService;
-		
+
+
 		public DepartmentsController(IDepartmentService service)
 		{
-
-			//TelegramService telegramService
 			_service = service;
-			//_telegramService = telegramService;
-			
-			
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			var departments = await _service.GetAllAsync();
-			//await bot.sendMessageAsync(1, "Someone Access Index PAge");
-			
-
 			return View(departments);
 		}
 
@@ -41,11 +33,11 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Create(DepartmentEntity entity)
 		{
 
-			if (!ModelState.IsValid) { return View(entity); }
-
-
+			if (!ModelState.IsValid)
+			{
+				return View(entity);
+			}
 			await _service.AddAsync(entity);
-
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -54,8 +46,10 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Update(int id)
 		{
 			var department = await _service.GetByIdAsync(id);
-
-			if (department is null) { return View("CustomError"); }
+			if (department is null)
+			{
+				return View("CustomError", $"Couldn't find department with ID: {id}");
+			}
 			return View(department);
 		}
 
@@ -64,48 +58,36 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> Update(int id, DepartmentEntity entity)
 		{
 
-			if (id == entity.Id)
+			if (id != entity.Id)
 			{
-				await _service.UpdateAsync(entity);
-
-
-
-
-				//await _telegramService.sendMessage(1, $"User Updated Department  - > {entity.Name} ");
-
-				return RedirectToAction(nameof(Index));
-
+				return View("CustomError", $"Trying to update {entity.Name} where ID's don't match");
 			}
-
-			return View("CustomError");
-			
+			await _service.UpdateAsync(entity);
+			return RedirectToAction(nameof(Index));
 		}
 
 		[HttpGet]
-		public async Task<IActionResult>Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
 			var department = await _service.GetByIdAsync(id);
-
-			if (department is null) { return View("CustomError"); }
-
-
+			if (department is null)
+			{
+				return View("CustomError", $"Couldn't find department with ID: {id}.");
+			}
 			return View(department);
 		}
 
 
-		[HttpPost,ActionName("Delete")]
-		public async Task<IActionResult>Confirm(int id)
+		[HttpPost, ActionName("Delete")]
+		public async Task<IActionResult> Confirm(int id)
 		{
 			var department = await _service.GetByIdAsync(id);
-
-			if (department is null) { return View("CustomError"); }
-
+			if (department is null)
+			{
+				return View("CustomError", $"Request to remove department failed.Couldn't find department with ID: {id}");
+			}
 			await _service.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));
-
 		}
-
-
-
 	}
 }
