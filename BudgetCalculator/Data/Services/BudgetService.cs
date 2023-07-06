@@ -4,6 +4,7 @@ using BudgetCalculator.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic;
 
 using System.Collections.Generic;
@@ -88,9 +89,17 @@ namespace BudgetCalculator.Data.Services
 		{
 			var budgetDB = await _context.Budgets.Include(item => item.CostCenter).Where(item => (item.Year == year) && (item.CostCenter.Id==costCenterId)).ToListAsync();
 
+		
+
+
 			List<MonthBudget> monthBudget = new List<MonthBudget>();
 
 			var budgetView = new BudgetEntityVM();
+			if (!budgetDB.Any())
+			{
+				return budgetView;
+			}
+
 			budgetDB.ForEach(item =>
 			{
 				monthBudget.Add(new MonthBudget

@@ -85,7 +85,7 @@ namespace BudgetCalculator.Controllers
 			var costService = await _service.GetCostCenterByIdAsync(id);
 
 
-			if (costService is null) { return View("NotFound"); }
+			if (costService is null) { return View("CustomError"); }
 
 			//TODO:USERNAME IS HARDCODED in View Use Dynamic
 
@@ -126,7 +126,7 @@ namespace BudgetCalculator.Controllers
 				return View(entity);
 			}
 
-			if (id != entity.Id) { return View("NotFound"); }
+			if (id != entity.Id) { return View("CustomError"); }
 
 
 
@@ -171,7 +171,7 @@ namespace BudgetCalculator.Controllers
 
 			var costCenter = await _service.GetCostCenterByIdAsync(id);
 
-			if (costCenter is null) { return View("NotFound"); }
+			if (costCenter is null) { return View("CustomError"); }
 			await _service.DeleteAsync(id);
 			return RedirectToAction(nameof(Index));
 

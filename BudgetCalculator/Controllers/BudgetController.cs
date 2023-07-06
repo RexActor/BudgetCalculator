@@ -101,6 +101,11 @@ namespace BudgetCalculator.Controllers
 		{
 
 
+			var budgetDb = await _service.GetByYearAndCostCenterAsync(budget.Year, budget.CostCenterId);
+		
+			if(budgetDb is not null) { return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}"); }
+
+
 			await _service.CreateBudget(budget);
 
 
@@ -111,7 +116,16 @@ namespace BudgetCalculator.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Update(int year, int costCenterId)
 		{
+			
+
+			
+
 			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
+
+			if(!budgetList.MonthBudgets.Any())
+			{
+				return View("CustomError",$"We couldn't locate budget for Cost Center with ID: {costCenterId} and Year: {year}");
+			}
 
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 			var costCenterList = new List<SelectListItem>();
@@ -160,7 +174,7 @@ namespace BudgetCalculator.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Update(BudgetEntityVM budget)
 		{
-
+			
 
 			await _service.UpdateBudget(budget);
 
@@ -222,9 +236,9 @@ namespace BudgetCalculator.Controllers
 		public async Task<IActionResult> DeleteConfirm(int year, int costCenterId)
 		{
 
-		//	var budgetList = await _service.GetByYearAndCostCenterAsync(year,costCenterId);
+			//	var budgetList = await _service.GetByYearAndCostCenterAsync(year,costCenterId);
 
-			//if (budgetList is null) { return View("NotFound"); }
+			//if (budgetList is null) { return View("CustomError"); }
 			await _service.DeleteBudgetAsync(year,costCenterId);
 			return RedirectToAction(nameof(Index));
 

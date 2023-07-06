@@ -1,0 +1,21 @@
+﻿@model String
+
+
+@{
+	string errorMessage = string.Empty;
+	if(Model is not null)
+	{
+		errorMessage = Model;
+	}
+}
+
+<div class="container alert alert-danger">
+
+	<h1 class="text-danger fw-bold text-center"><i class="bi bi-exclamation-octagon-fill"></i><span class="h2"> We couldn't complete your request</span></h1>
+	<div class=" text-center">
+		<div class="">
+			<hr />
+			<span class="text-black h5">@errorMessage</span>
+		</div>
+	</div>
+</div>
