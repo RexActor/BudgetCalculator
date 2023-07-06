@@ -1,6 +1,7 @@
 ﻿using BudgetCalculator.Data.Services;
 using BudgetCalculator.Data.ViewModels;
 using BudgetCalculator.Finance.Calendar;
+using BudgetCalculator.Migrations;
 using BudgetCalculator.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -108,9 +109,9 @@ namespace BudgetCalculator.Controllers
 
 		//GET:update/year={year}&CostCenter={costCenter}
 		[HttpGet]
-		public async Task<IActionResult> Update(int year, int costCenter)
+		public async Task<IActionResult> Update(int year, int costCenterId)
 		{
-			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenter);
+			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
 
 			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 			var costCenterList = new List<SelectListItem>();
@@ -165,6 +166,69 @@ namespace BudgetCalculator.Controllers
 
 
 			return RedirectToAction(nameof(Index));
+		}
+		//GET:update/year={year}&CostCenter={costCenter}
+		[HttpGet]
+		public async Task<IActionResult> Delete(int year,int costCenterId)
+		{
+			var budgetList = await _service.GetByYearAndCostCenterAsync(year, costCenterId);
+
+			var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
+			var costCenterList = new List<SelectListItem>();
+			var departments = new List<SelectListGroup>();
+
+			if (budgetDropDowns.CostCenters is not null)
+			{
+				foreach (var dropDown in budgetDropDowns.CostCenters)
+				{
+					if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+					{
+						departments.Add(
+							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+							);
+					}
+
+				}
+			}
+
+
+			foreach (var department in departments)
+			{
+				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				{
+					costCenterList.Add(new SelectListItem
+					{
+						Value = item.Id.ToString(),
+						Text = item.Name,
+						Group = department
+					});
+				});
+
+
+			}
+
+
+
+
+
+			ViewBag.CostCenters = costCenterList;
+
+
+			return View(budgetList);
+		}
+
+		[HttpPost,ActionName("Delete")]
+
+		public async Task<IActionResult> DeleteConfirm(int year, int costCenterId)
+		{
+
+		//	var budgetList = await _service.GetByYearAndCostCenterAsync(year,costCenterId);
+
+			//if (budgetList is null) { return View("NotFound"); }
+			await _service.DeleteBudgetAsync(year,costCenterId);
+			return RedirectToAction(nameof(Index));
+
+			
 		}
 
 	}

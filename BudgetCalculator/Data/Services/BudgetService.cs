@@ -3,6 +3,7 @@ using BudgetCalculator.Data.ViewModels;
 using BudgetCalculator.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.VisualBasic;
 
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace BudgetCalculator.Data.Services
 					Year = entity.Year
 
 				});
-
+				
 
 			});
 
@@ -50,6 +51,16 @@ namespace BudgetCalculator.Data.Services
 			await _context.SaveChangesAsync();
 
 
+		}
+
+		public async Task DeleteBudgetAsync(int year, int costCenterId)
+		{
+
+			List<BudgetEntity> budgetEntities = await _context.Budgets.Include(item=>item.CostCenter).Where(item=>item.CostCenter.Id== costCenterId).Where(item=>item.Year==year).ToListAsync();
+
+			_context.Budgets.RemoveRange(budgetEntities);
+			await _context.SaveChangesAsync();
+			
 		}
 
 		public async Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync()
@@ -92,10 +103,10 @@ namespace BudgetCalculator.Data.Services
 
 				});
 			});
-			budgetView.CostCenterId = budgetDB.First().CostCenter.Id;
-			budgetView.Year = budgetDB.First().Year;
+			budgetView.CostCenterId = budgetDB.FirstOrDefault().CostCenter.Id;
+			budgetView.Year = budgetDB.FirstOrDefault().Year;
 			budgetView.MonthBudgets = monthBudget;
-
+			budgetView.Id=budgetDB.FirstOrDefault().Id;
 
 
 			return budgetView;

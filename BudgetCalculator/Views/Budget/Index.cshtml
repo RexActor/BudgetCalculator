@@ -16,6 +16,7 @@
 
 	<thead class="table-dark">
 		<tr>
+			<th>ID</th>
 			<th>Cost Center</th>
 			<th>Year</th>
 
@@ -27,15 +28,15 @@
 		@foreach (var budget in Model)
 		{
 			<tr>
-
+				<td>@budget.Id</td>
 				<td>@budget.CostCenter.Name</td>
 				<td>@budget.Year</td>
 
 				<td>
 					<div class="float-end">
-						<a class="btn btn-sm btn-outline-success shadow" asp-action="Update" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenter="@budget.CostCenter.Id">View</a>
-						<a class="btn btn-sm btn-outline-primary shadow" asp-action="Update" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenter="@budget.CostCenter.Id">Update</a>
-						<a class="btn btn-sm btn-outline-danger shadow" asp-action="Update" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenter="@budget.CostCenter.Id">Delete</a>
+						<a class="btn btn-sm btn-outline-success shadow" asp-action="View" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenterId="@budget.CostCenter.Id">View</a>
+						<a class="btn btn-sm btn-outline-primary shadow" asp-action="Update" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenterId="@budget.CostCenter.Id">Update</a>
+						<a class="btn btn-sm btn-outline-danger shadow" asp-action="Delete" asp-controller="Budget" asp-route-year="@budget.Year" asp-route-CostCenterId="@budget.CostCenter.Id">Delete</a>
 					</div>
 
 				</td>

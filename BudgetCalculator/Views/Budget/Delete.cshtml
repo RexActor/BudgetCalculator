@@ -7,17 +7,17 @@
 *@
 @{
 
-	ViewData["Title"] = "Update Budget";
+	ViewData["Title"] = "Delete Budget";
 
 
 
 }
 
 
-<h1>Welcome. Let's Update some budgets!</h1>
+<h1>Welcome. Let's Delete some budgets!</h1>
 
 
-<form asp-action="Update" method="post">
+<form asp-action="Delete" method="post">
 	<div class="col-md-5 ">
 		
 
@@ -25,7 +25,7 @@
 
 			<div class="row g-0">
 				<div class="card-header">
-					<h3 class="text-center">Update Budget</h3>
+					<h3 class="text-center">Delete Budget</h3>
 				</div>
 			</div>
 
@@ -38,7 +38,7 @@
 
 						<label class=" col-form-label col-3 ">Cost Center</label>
 						<div class="col-auto">
-							<select type="text" asp-for="CostCenterId" class="form-select" asp-items="@ViewBag.CostCenters">
+							<select disabled type="text" asp-for="CostCenterId" class="form-select" asp-items="@ViewBag.CostCenters">
 								<option disabled selected>--SELECT--</option>
 							</select>
 						</div>
@@ -47,7 +47,7 @@
 
 						<label class=" col-form-label col-3 ">Year</label>
 						<div class="col-auto">
-							<input type="number" asp-for="Year" class="form-control" />
+							<input readonly type="number" asp-for="Year" class="form-control" />
 
 						</div>
 					</div>
@@ -82,9 +82,9 @@
 										<input hidden asp-for="MonthBudgets[i].MonthName" value="@Model.MonthBudgets[i].MonthName" />
 										<input hidden asp-for="MonthBudgets[i].Id" value="@Model.MonthBudgets[i].Id"/>
 									</td>
-									<td><input asp-for="MonthBudgets[i].Cases" class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
-									<td><input asp-for="MonthBudgets[i].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
-									<td><input asp-for="MonthBudgets[i].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
+									<td><input readonly asp-for="MonthBudgets[i].Cases" class="form-control" type="number" placeholder="0" title="Input amount in cases budgeted in" /></td>
+									<td><input readonly asp-for="MonthBudgets[i].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
+									<td><input readonly asp-for="MonthBudgets[i].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 								</tr>
 							}
 
@@ -102,8 +102,11 @@
 							<tr>
 								<td colspan="4">
 									
-									<input type="submit" value="Update" class="btn btn-outline-primary float-end" />
-									<a class="btn btn-outline-secondary float-start" asp-action="Index" asp-asp-controller="Budget">Cancel</a>
+									<input hidden asp-for="Id"  />
+									<input hidden asp-for="CostCenterId" />
+									<input  type="submit" value="Delete" class="btn btn-outline-danger float-end" />
+									
+									<a class="btn btn-outline-secondary float-start" asp-action="Index" asp-controller="Budget">Cancel</a>
 								</td>
 							</tr>
 						</tfoot>
