@@ -18,6 +18,6 @@ namespace BudgetCalculator.Data
 		public DbSet<CostCenterEntity> CostCenters { get; set; }
 		public DbSet<DepartmentEntity> Departments { get; set; }
 		public DbSet<BudgetEntity> Budgets { get; set; }
-
+		public DbSet<WeeklyBudget>WeeklyBudgets { get; set; }
 	}
 }

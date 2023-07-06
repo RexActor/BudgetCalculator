@@ -1,5 +1,6 @@
 ﻿using BudgetCalculator.Data.Base;
 using BudgetCalculator.Data.ViewModels;
+using BudgetCalculator.Finance.Calendar;
 using BudgetCalculator.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BudgetCalculator.Data.Services
 {
@@ -25,6 +27,7 @@ namespace BudgetCalculator.Data.Services
 			List<BudgetEntity> budgets = new List<BudgetEntity>();
 
 			var costCenter = await _context.CostCenters.FirstOrDefaultAsync(item => item.Id == entity.CostCenterId);
+			
 			if (costCenter is null)
 			{
 				return;
@@ -50,6 +53,44 @@ namespace BudgetCalculator.Data.Services
 			await _context.Budgets.AddRangeAsync(budgets);
 
 			await _context.SaveChangesAsync();
+
+
+			
+
+
+			List<WeeklyBudget> weeklyBudgets = new List<WeeklyBudget>();
+			int weekNumber = 1;
+			
+
+			budgets.ForEach(budget =>
+			{
+				for (int i = 0; i < FinanceCalendar.FinanceCalendarWeekModel[budget.MonthName]; i++)
+				{
+					weeklyBudgets.Add(new WeeklyBudget
+					{
+						MonthName = budget.MonthName,
+						Cases = budget.Cases / FinanceCalendar.FinanceCalendarWeekModel[budget.MonthName],
+						DirectProductiveHours = budget.DirectProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[budget.MonthName],
+						AgencyProductiveHours = budget.AgencyProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[budget.MonthName],
+						CostCenter = budget.CostCenter,
+						WeekNumber = weekNumber,
+						Budget = budget
+
+					});
+					weekNumber++;
+				}
+
+
+
+
+			});
+
+
+
+			await _context.WeeklyBudgets.AddRangeAsync(weeklyBudgets);
+			await _context.SaveChangesAsync();
+
+
 
 
 		}
@@ -120,6 +161,16 @@ namespace BudgetCalculator.Data.Services
 
 			return budgetView;
 
+		}
+
+		public async Task<IEnumerable<WeeklyBudget>> GetWeeklyBudgetAsync(int year, int costCenterId)
+		{
+			
+
+			List<WeeklyBudget> weeklyBudget = await _context.WeeklyBudgets.Include(item=>item.CostCenter).Include(item=>item.Budget).ThenInclude(item=>item.CostCenter.Department).Where(item=>item.Budget.Year==year).Where(item=>item.CostCenter.Id==costCenterId).ToListAsync();
+
+			return weeklyBudget;
+				 
 		}
 
 		public async Task UpdateBudget(BudgetEntityVM entity)

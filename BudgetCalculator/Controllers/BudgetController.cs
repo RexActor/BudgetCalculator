@@ -28,14 +28,21 @@ namespace BudgetCalculator.Controllers
 			return View(budgets);
 		}
 
-		public IActionResult Weekly()
+		//GET: weekly?year={year}&costCenterId={costcenterID}
+		[HttpGet]
+		public async Task<IActionResult> Weekly(int year, int CostCenterId)
 		{
-			return View();
+
+			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year, CostCenterId);
+
+			
+			return View(weeklyBudgets);
 		}
 
 
 
 		[HttpGet]
+		
 		public async Task<IActionResult> Create()
 		{
 			var budgetList = new BudgetEntityVM();
@@ -89,11 +96,21 @@ namespace BudgetCalculator.Controllers
 
 			var budgetDb = await _service.GetByYearAndCostCenterAsync(budget.Year, budget.CostCenterId);
 
-			if (budgetDb is not null) {
+			if (budgetDb is null) {
 				return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}");
 			}
 
+
+
+			
+	
+
+
+
 			await _service.CreateBudget(budget);
+
+
+
 			return RedirectToAction(nameof(Index));
 		}
 

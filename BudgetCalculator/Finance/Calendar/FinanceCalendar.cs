@@ -7,6 +7,7 @@ namespace BudgetCalculator.Finance.Calendar
 		/// <summary>
 		/// Represents 4-4-5 Week model
 		/// This is fixed model
+		/// Dictionary have Month names as Keys and Week count as values
 		/// <para name="Test"></para>
 		/// </summary>
 		

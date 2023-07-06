@@ -12,6 +12,7 @@ namespace BudgetCalculator.Data.Services
 		Task UpdateBudget(BudgetEntityVM entity);
 		Task DeleteBudgetAsync(int year,int costCenterId);
 		Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year,int costCenterId);
+		Task<IEnumerable<WeeklyBudget>>GetWeeklyBudgetAsync(int year,int costCenterId);
 		Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync();
 	}
 }

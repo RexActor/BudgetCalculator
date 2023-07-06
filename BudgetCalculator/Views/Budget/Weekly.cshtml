@@ -1,170 +1,178 @@
-﻿@*
+﻿@model IEnumerable<BudgetCalculator.Models.WeeklyBudget>;
+
+@*
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 
 	ViewData["Title"] = "Budget View";
-
+	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
+	var firstDate = new DateTime(BudgetYear, 1, 1);
 }
 
 
-<div class="col-md-6">
+<div class="row" style="font-size:14px;">
 
-	<div class="card">
+	@foreach (var week in Model)
+	{
 
-		<div class="row bg-light g-0 ">
+		
+		
 
+		<div class="col-md-5 col-xs-6 border-primary mb-3">
 
-			<div class="card-header">
-				<h3 class="text-center card-title">
-					Budget Card
-					<a class=" text-danger float-end" asp-action="Edit"><i class="bi bi-pencil-square"></i></a>
-				</h3>
+			<div class="card">
 
-			</div>
-
+				<div class="row bg-light g-0 ">
 
 
-			<div class="col-md-6">
-				<div class="card-body">
+					<div class="card-header">
+						<h3 class="text-center card-title">
+							Week @week.WeekNumber Budget Card
+							<a class=" text-danger float-end" asp-action="Edit"><i class="bi bi-pencil-square"></i></a>
+						</h3>
+
+					</div>
 
 
-					<p class="card-text"><b>WC date:</b> {date}</p>
-					<p class="card-text"><b>Week:</b> {Week:NUmber}</p>
-					<p class="card-text"><b>Month:</b> {Month}</p>
+
+					<div class="col-md-6">
+						<div class="card-body">
 
 
-				</div>
-			</div>
-
-			<div class="col-md-6">
-				<div class="card-body">
-					<p><b>Number of Cases/Day:</b> {cases}</p>
-
-					<p><b>Average Monthly mins/case:</b> {hours}</p>
-					<p><b>Total Minutes:</b> {minutes}</p>
-					<p><b>Total Hours Allowed:</b> {hours}</p>
-
-				</div>
-
-			</div>
-
-			@*<div class="row">
-			<div class="col-md-12">
-			<div class="card-body">
-			<div class="form-floating mb-3">
-			<input id="casesInput" class="form-control" placeholder="Number of Cases/Day" /><label for="casesInput">Number of Cases/Day</label>
-			</div>
-
-			<p>Average Monthly mins/case: {hours}</p>
-			<p>Total Minutes: {minutes}</p>
-			<p>Total Hours Allowed: {hours}</p>
-			</div>
-			</div>
+							<p class="card-text"><b>WC date:</b> @firstDate.AddDays((week.WeekNumber-1)*7).ToShortDateString()</p>
+							<p class="card-text"><b>Week:</b> @week.WeekNumber</p>
+							<p class="card-text"><b>Month:</b> @week.MonthName</p>
 
 
-			</div>*@
+						</div>
+					</div>
 
-			<div class="row">
+					<div class="col-md-6">
+						<div class="card-body">
+							@{
 
+
+								double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
+
+										double allowedMinutesPerCase = Math.Round(TotalWeeklyProductiveHours / (float)week.Cases, 3) * 60;
+												double TotalMinutes = week.Cases * allowedMinutesPerCase;
+								double TotalHoursAllowed = TotalMinutes/60;
+							}
+
+							<p><b>Number of Cases/Day:</b> @week.Cases </p>
+
+
+							<p><b>Av. Monthly mins/case:</b> @allowedMinutesPerCase</p>
+							<p><b>Total Minutes:</b> @TotalMinutes @TotalWeeklyProductiveHours</p>
+							<p><b>Total Hours Allowed:</b> @TotalHoursAllowed</p>
+
+						</div>
+
+					</div>
+
+					@*<div class="row">
 				<div class="col-md-12">
+				<div class="card-body">
+				<div class="form-floating mb-3">
+				<input id="casesInput" class="form-control" placeholder="Number of Cases/Day" /><label for="casesInput">Number of Cases/Day</label>
+				</div>
+
+				<p>Average Monthly mins/case: {hours}</p>
+				<p>Total Minutes: {minutes}</p>
+				<p>Total Hours Allowed: {hours}</p>
+				</div>
+				</div>
 
 
-					<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
+				</div>*@
 
-					<table class="table table-borderless text-center">
-						<thead>
-							<tr class="table-bordered">
-								<th>Cost Centre</th>
-								<th>Direct Role</th>
-								<th>HC</th>
-								<th>Hrs per shift per person</th>
-								<th>Total Hours</th>
-							</tr>
-						</thead>
+					<div class="row">
+
+						<div class="col-md-12">
 
 
-						<tbody>
-							<tr>
+							<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
 
-							<tr style="border-top:solid;">
-
-								<td>{cost centre}</td>
-								<td>{role}</td>
-								<td>{HC}</td>
-								<td>{Hours}</td>
-								<td>{total Hours}</td>
-							</tr>
-							<tr>
-
-								<td>{cost centre}</td>
-								<td>{role}</td>
-								<td>{HC}</td>
-								<td>{Hours}</td>
-								<td>{total Hours}</td>
-							</tr>
-							<tr >
-
-								<td>{cost centre}</td>
-								<td>{role}</td>
-								<td>{HC}</td>
-								<td>{Hours}</td>
-								<td>{total Hours}</td>
-							</tr>
+							<table class="table table-borderless text-center">
+								<thead>
+									<tr class="table-bordered">
+										<th>Cost Centre</th>
+										<th>Direct Role</th>
+										<th>HC</th>
+										<th>Hrs per shift per person</th>
+										<th>Total Hours</th>
+									</tr>
+								</thead>
 
 
-							<tr>
-								<td></td>
-								<td class="text-end" style="border-bottom:double;" colspan="2"><b>Total Direct Hours:</b></td>
-								<td></td>
-								<td class="text-center" style="border-bottom:double;">{total Hours}</td>
+								<tbody>
+									<tr>
 
-							</tr>
+									<tr style="border-top:solid;">
+
+										<td>@week.CostCenter.Name</td>
+										<td>@week.CostCenter.Department.Name</td>
+										<td>{HC}</td>
+										<td>{Hours}</td>
+										<td>{total Hours}</td>
+									</tr>
+							
 
 
-							<tr>
-								<td class="text-end" colspan="3"><b>Agency Hours:</b></td>
-								<td class="text-center">{total Hours}</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td class="text-end" style="border-bottom:double;" colspan="2"><b>Agency Heads Available:</b></td>
-								<td class="text-center" style="border-bottom:double;" colspan="1">{Head Count}</td>
-								<td></td>
-							</tr>
+									<tr>
+										<td></td>
+										<td class="text-end" style="border-bottom:double;" colspan="2"><b>Direct Hours:</b></td>
+										<td></td>
+										<td class="text-center" style="border-bottom:double;">{total Hours}</td>
+
+									</tr>
+
+
+									<tr>
+										<td class="text-end" colspan="3"><b>Agency Hours:</b></td>
+										<td class="text-center">{total Hours}</td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td class="text-end" style="border-bottom:double;" colspan="2"><b>Agency Available:</b></td>
+										<td class="text-center" style="border-bottom:double;" colspan="1">{Head Count}</td>
+										<td></td>
+									</tr>
 
 
 
-						</tbody>
+								</tbody>
 
-					</table>
-
-					
+							</table>
 
 
+
+
+
+						</div>
+
+
+					</div>
+					<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
+						<span>
+
+							Last Updated: @DateTime.Now.ToLongDateString() by {User}
+
+
+						</span>
+					</div>
 
 				</div>
 
-			
+
+
+
+
+
+
 			</div>
-			<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
-				<span>
-					
-					Last Updated: @DateTime.Now.ToLongDateString() by {User}
-
-
-				</span>
-			</div>
-
 		</div>
-
-
-
-
-
-
-
-	</div>
+	}
 </div>
-

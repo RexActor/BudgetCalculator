@@ -25,7 +25,13 @@
 
 			<div class="row g-0">
 				<div class="card-header">
-					<h3 class="text-center">Update Budget
+
+
+					<h3 class="text-center">
+						<a class="text-success float-start" asp-action="Weekly" asp-route-CostCenterId="@Model.CostCenterId" asp-route-year="@Model.Year">
+							<i class="bi bi-calendar-week"></i>
+						</a>
+						Update Budget
 					<a class="text-danger float-end " asp-action="Delete" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId"><i class="bi bi-trash-fill"></i></a>
 					<a class="text-primary float-end me-3" asp-action="Update" asp-route-year="@Model.Year" asp-route-CostCenterId="@Model.CostCenterId"><i class="bi bi-pencil-square"></i></a>
 					
