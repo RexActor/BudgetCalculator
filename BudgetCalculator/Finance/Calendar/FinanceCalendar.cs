@@ -10,7 +10,7 @@ namespace BudgetCalculator.Finance.Calendar
 		/// Dictionary have Month names as Keys and Week count as values
 		/// <para name="Test"></para>
 		/// </summary>
-		
+
 		public static Dictionary<string, int> FinanceCalendarWeekModel = new Dictionary<string, int>()
 		{
 			{ "January",4},
@@ -28,16 +28,28 @@ namespace BudgetCalculator.Finance.Calendar
 
 		};
 
-		
+		public static string GetMonthByIndex(int index)
+		{
+			if (index < FinanceCalendarWeekModel.Count-1)
+			{
+				return FinanceCalendar.FinanceCalendarWeekModel.ElementAt(index).Key;
+			}
+			else
+			{
+				return string.Empty;
+			}
+
+		}
+
 
 
 		public static int GetWeeksPerMonth(int year, int month)
 		{
 			int result = 0;
-			
+
 			var DaysInMonth = DateTime.DaysInMonth(year, month);
 
-			
+
 			for (int x = 1; x <= Convert.ToInt32(DaysInMonth); x++)
 			{
 				if (new DateTime(year, month, x).DayOfWeek == DayOfWeek.Friday)

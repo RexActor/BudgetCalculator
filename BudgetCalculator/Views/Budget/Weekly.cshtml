@@ -7,172 +7,175 @@
 
 	ViewData["Title"] = "Budget View";
 	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
+	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
 	var firstDate = new DateTime(BudgetYear, 1, 1);
+
+
 }
-
-
-<div class="row" style="font-size:14px;">
-
-	@foreach (var week in Model)
-	{
-
-		
-		
-
-		<div class="col-md-5 col-xs-6 border-primary mb-3">
-
-			<div class="card">
-
-				<div class="row bg-light g-0 ">
-
-
-					<div class="card-header">
-						<h3 class="text-center card-title">
-							Week @week.WeekNumber Budget Card
-							<a class=" text-danger float-end" asp-action="Edit"><i class="bi bi-pencil-square"></i></a>
-						</h3>
-
-					</div>
-
-
-
-					<div class="col-md-6">
-						<div class="card-body">
-
-
-							<p class="card-text"><b>WC date:</b> @firstDate.AddDays((week.WeekNumber-1)*7).ToShortDateString()</p>
-							<p class="card-text"><b>Week:</b> @week.WeekNumber</p>
-							<p class="card-text"><b>Month:</b> @week.MonthName</p>
-
-
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<div class="card-body">
-							@{
-
-
-								double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
-
-										double allowedMinutesPerCase = Math.Round(TotalWeeklyProductiveHours / (float)week.Cases, 3) * 60;
-												double TotalMinutes = week.Cases * allowedMinutesPerCase;
-								double TotalHoursAllowed = TotalMinutes/60;
-							}
-
-							<p><b>Number of Cases/Day:</b> @week.Cases </p>
-
-
-							<p><b>Av. Monthly mins/case:</b> @allowedMinutesPerCase</p>
-							<p><b>Total Minutes:</b> @TotalMinutes @TotalWeeklyProductiveHours</p>
-							<p><b>Total Hours Allowed:</b> @TotalHoursAllowed</p>
-
-						</div>
-
-					</div>
-
-					@*<div class="row">
-				<div class="col-md-12">
-				<div class="card-body">
-				<div class="form-floating mb-3">
-				<input id="casesInput" class="form-control" placeholder="Number of Cases/Day" /><label for="casesInput">Number of Cases/Day</label>
-				</div>
-
-				<p>Average Monthly mins/case: {hours}</p>
-				<p>Total Minutes: {minutes}</p>
-				<p>Total Hours Allowed: {hours}</p>
-				</div>
-				</div>
-
-
-				</div>*@
-
-					<div class="row">
-
-						<div class="col-md-12">
-
-
-							<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
-
-							<table class="table table-borderless text-center">
-								<thead>
-									<tr class="table-bordered">
-										<th>Cost Centre</th>
-										<th>Direct Role</th>
-										<th>HC</th>
-										<th>Hrs per shift per person</th>
-										<th>Total Hours</th>
-									</tr>
-								</thead>
-
-
-								<tbody>
-									<tr>
-
-									<tr style="border-top:solid;">
-
-										<td>@week.CostCenter.Name</td>
-										<td>@week.CostCenter.Department.Name</td>
-										<td>{HC}</td>
-										<td>{Hours}</td>
-										<td>{total Hours}</td>
-									</tr>
-							
-
-
-									<tr>
-										<td></td>
-										<td class="text-end" style="border-bottom:double;" colspan="2"><b>Direct Hours:</b></td>
-										<td></td>
-										<td class="text-center" style="border-bottom:double;">{total Hours}</td>
-
-									</tr>
-
-
-									<tr>
-										<td class="text-end" colspan="3"><b>Agency Hours:</b></td>
-										<td class="text-center">{total Hours}</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td class="text-end" style="border-bottom:double;" colspan="2"><b>Agency Available:</b></td>
-										<td class="text-center" style="border-bottom:double;" colspan="1">{Head Count}</td>
-										<td></td>
-									</tr>
-
-
-
-								</tbody>
-
-							</table>
-
-
-
-
-
-						</div>
-
-
-					</div>
-					<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
-						<span>
-
-							Last Updated: @DateTime.Now.ToLongDateString() by {User}
-
-
-						</span>
-					</div>
-
-				</div>
-
-
-
-
-
-
-
+<div class="container ">
+	<div class="row d-flex justify-content-center" style="font-size:14px;">
+		<div class="row w-75 mb-3">
+			<div class="col-md-12 h3 text-center">
+
+				<a class="text-center float-start h2" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonth">
+						<i class="bi bi-skip-backward"></i>
+					</a>
+				
+				<span>@ViewBag.CurrentMonth</span>
+
+				<a class=" text-center float-end h2" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonth">
+					<i class="bi bi-skip-forward"></i>
+				</a>
 			</div>
 		</div>
-	}
+		@foreach (var week in Model)
+		{
+
+
+
+
+			<div class="col-md-5 col-xs-6 border-primary mb-3">
+
+				<div class="card">
+
+					<div class="row bg-light g-0 ">
+
+
+						<div class="card-header">
+							<h3 class="text-center card-title">
+								Week @week.WeekNumber Budget Card
+								<a class=" text-danger float-end" asp-action="Edit"><i class="bi bi-pencil-square"></i></a>
+							</h3>
+
+						</div>
+
+
+
+						<div class="col-md-6">
+							<div class="card-body">
+
+
+								<p class="card-text"><b>WC date:</b> @firstDate.AddDays((week.WeekNumber-1)*7).ToShortDateString()</p>
+								<p class="card-text"><b>Week:</b> @week.WeekNumber</p>
+								<p class="card-text"><b>Month:</b> @week.MonthName</p>
+
+
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="card-body">
+								@{
+
+
+									double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
+
+									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
+									double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
+
+									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
+								}
+
+								<p><b>Cases/Day:</b> @week.Cases </p>
+
+
+								<p><b>Av. mins/case:</b> @allowedMinutesPerCase</p>
+								<p><b>Total Minutes:</b> @TotalMinutes</p>
+								<p><b>Hours Allowed:</b> @TotalHoursAllowed.ToString("#.###")</p>
+
+							</div>
+
+						</div>
+
+
+
+						<div class="row">
+
+							<div class="col-md-12">
+
+
+								<p class="text-decoration-underline small"><b>DIRECT HC Only Input</b></p>
+
+								<table class="table table-borderless text-center small">
+									<thead>
+										<tr class="table-bordered">
+											<th title="Cost Center">CC</th>
+											<th>Direct Role</th>
+											<th title="Head Count">HC</th>
+											<th>Hrs shitf/person</th>
+											<th>Total Hours</th>
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr>
+
+										<tr style="border-top:solid;">
+
+											<td title="Cost Center">@week.CostCenter.Name</td>
+											<td>@week.CostCenter.Department.Name</td>
+											<td title="Head Count">{HC}</td>
+											<td>{Hours}</td>
+											<td>{total Hours}</td>
+										</tr>
+
+
+
+										<tr>
+											<td></td>
+											<td class="text-end" style="border-bottom:double;" colspan="2"><b>Direct Hours:</b></td>
+											<td></td>
+											<td class="text-center" style="border-bottom:double;">{total Hours}</td>
+
+										</tr>
+
+
+										<tr>
+											<td class="text-end" colspan="3"><b>Agency Hours:</b></td>
+											<td class="text-center">{total Hours}</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td class="text-end" style="border-bottom:double;" colspan="2"><b>Agency Available:</b></td>
+											<td class="text-center" style="border-bottom:double;" colspan="1">{Head Count}</td>
+											<td></td>
+										</tr>
+
+
+
+									</tbody>
+
+								</table>
+
+
+
+
+
+							</div>
+
+
+						</div>
+						<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
+							<span>
+
+								Last Updated: @DateTime.Now.ToLongDateString() by {User}
+
+
+							</span>
+						</div>
+
+					</div>
+
+
+
+
+
+
+
+				</div>
+			</div>
+		}
+	</div>
 </div>

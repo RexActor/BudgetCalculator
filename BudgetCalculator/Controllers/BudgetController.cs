@@ -28,21 +28,65 @@ namespace BudgetCalculator.Controllers
 			return View(budgets);
 		}
 
+
+
+
 		//GET: weekly?year={year}&costCenterId={costcenterID}
 		[HttpGet]
-		public async Task<IActionResult> Weekly(int year, int CostCenterId)
+		public async Task<IActionResult> Weekly(int year, int CostCenterId, int monthIndex)
 		{
+			if (monthIndex > 11)
+			{
+				monthIndex = 11;
+			}
+
+			string monthName = FinanceCalendar.FinanceCalendarWeekModel.ElementAt(monthIndex).Key;
+
+			int offset = 0;
+			int amountToDisplay = FinanceCalendar.FinanceCalendarWeekModel[monthName];
+
+
 
 			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year, CostCenterId);
+			if (monthIndex == 0)
+			{
+				ViewBag.PreviousMonth = monthIndex;
+			}
+			else
+			{
+				ViewBag.PreviousMonth = monthIndex - 1;
 
-			
-			return View(weeklyBudgets);
+			}
+			if (monthIndex == 12)
+			{
+				ViewBag.NextMonth = monthIndex;
+			}
+			else
+			{
+				ViewBag.NextMonth = monthIndex + 1;
+			}
+
+
+			ViewBag.CurrentMonth = monthName;
+
+			//return RedirectToRoute(new 
+			//{
+			//	controller="Budget",
+			//	action="Weekly",
+			//	CostCenterId = CostCenterId,
+			//	year =year,
+
+			//	monthIndex= monthIndex
+			//});
+
+			//return RedirectToAction(nameof(Weekly), new {year=year, CostCenterId= CostCenterId, monthIndex = monthIndex});
+			return View(weeklyBudgets.Where(item => item.MonthName == monthName));
 		}
 
 
 
 		[HttpGet]
-		
+
 		public async Task<IActionResult> Create()
 		{
 			var budgetList = new BudgetEntityVM();
@@ -96,14 +140,15 @@ namespace BudgetCalculator.Controllers
 
 			var budgetDb = await _service.GetByYearAndCostCenterAsync(budget.Year, budget.CostCenterId);
 
-			if (budgetDb is null) {
+			if (budgetDb is null)
+			{
 				return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}");
 			}
 
 
 
-			
-	
+
+
 
 
 
