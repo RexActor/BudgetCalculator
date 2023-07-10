@@ -110,7 +110,7 @@ namespace BudgetCalculator.Data.Services
 			
 			var budgetList = new List<BudgetEntity>();
 
-			var result = await _context.Budgets.Include(item => item.CostCenter).GroupBy(c=>c.CostCenter).Select(item=>item.First()).ToListAsync();
+			var result = await _context.Budgets.Include(item => item.CostCenter).ThenInclude(item=>item.Department).GroupBy(c=>c.CostCenter).Select(item=>item.First()).ToListAsync();
 
 
 			return result;

@@ -1,40 +1,95 @@
 ﻿@model IEnumerable<BudgetCalculator.Models.WeeklyBudget>;
-
+@using BudgetCalculator.Finance.Calendar;
 @*
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 
-	ViewData["Title"] = "Budget View";
+	ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
 	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
 	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
+	string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault();
 	var firstDate = new DateTime(BudgetYear, 1, 1);
+
+	string nextMonthDisable = string.Empty;
+	string prevMonthDisable = string.Empty;
+	string activeMonth = string.Empty;
+
+	if (ViewBag.NextMonth == 12)
+	{
+		nextMonthDisable = "disabled";
+	}
+	if (ViewBag.PreviousMonth == 0)
+	{
+		prevMonthDisable = "disabled";
+	}
+
+
 
 
 }
-<div class="container ">
-	<div class="row d-flex justify-content-center" style="font-size:14px;">
-		<div class="row w-75 mb-3">
-			<div class="col-md-12 h3 text-center">
 
-				<a class="text-center float-start h2" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonth">
-						<i class="bi bi-skip-backward"></i>
-					</a>
-				
-				<span>@ViewBag.CurrentMonth</span>
+<div class="card border shadow ">
+	<div class="row d-flex justify-content-center g-0" style="font-size:14px;">
+		<div class=" row card-header g-0">
+			<div class="col-md-12 text-center g-0">
+				<h2 class="card-title  ">@departementName</h2>
+				<nav aria-label="page navigation " >
 
-				<a class=" text-center float-end h2" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonth">
-					<i class="bi bi-skip-forward"></i>
-				</a>
+
+					<ul class="pagination justify-content-center mt-3 ">
+
+						<li class="page-item @prevMonthDisable">
+
+							<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonth">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+
+
+						</li>
+						@foreach(var month in FinanceCalendar.FinanceCalendarWeekModel)
+						{
+							if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
+							{
+								activeMonth = "active";
+							}
+							else
+							{
+								activeMonth = string.Empty;
+							}
+
+							<li class="page-item @activeMonth">
+								<a class="text-center page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key)">
+									<span>@month.Key.Substring(0,3)</span>
+								</a>
+							</li>
+						}
+
+
+						<li class="page-item @nextMonthDisable">
+							<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonth">
+
+
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+						
 			</div>
 		</div>
+
+		
+			
+		
+
 		@foreach (var week in Model)
 		{
 
 
 
 
-			<div class="col-md-5 col-xs-6 border-primary mb-3">
+			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3">
 
 				<div class="card">
 
@@ -55,9 +110,9 @@
 							<div class="card-body">
 
 
-								<p class="card-text"><b>WC date:</b> @firstDate.AddDays((week.WeekNumber-1)*7).ToShortDateString()</p>
-								<p class="card-text"><b>Week:</b> @week.WeekNumber</p>
-								<p class="card-text"><b>Month:</b> @week.MonthName</p>
+								<p class="card-text text-secondary"><b>WC date:</b><span class="text-success fw-bolder"> @firstDate.AddDays((week.WeekNumber-1)*7).ToShortDateString()</span></p>
+								<p class="card-text text-secondary"><b>Week:</b><span class="text-success fw-bolder"> @week.WeekNumber</span></p>
+								<p class="card-text text-secondary"><b>Month:</b><span class="text-success fw-bolder"> @week.MonthName</span></p>
 
 
 							</div>
@@ -76,12 +131,15 @@
 									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
 								}
 
-								<p><b>Cases/Day:</b> @week.Cases </p>
+								<p class="text-secondary">
+									<b>Cases/Day:</b><span class="text-success fw-bolder"> @week.Cases </span>
+
+								</p>
 
 
-								<p><b>Av. mins/case:</b> @allowedMinutesPerCase</p>
-								<p><b>Total Minutes:</b> @TotalMinutes</p>
-								<p><b>Hours Allowed:</b> @TotalHoursAllowed.ToString("#.###")</p>
+								<p class="text-secondary"><b>Av. mins/case:</b> <span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
+								<p class="text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes</span></p>
+								<p class="text-secondary"><b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###")</span></p>
 
 							</div>
 

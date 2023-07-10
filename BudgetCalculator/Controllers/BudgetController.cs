@@ -39,22 +39,19 @@ namespace BudgetCalculator.Controllers
 			{
 				monthIndex = 11;
 			}
+			if (monthIndex < 0)
+			{
+				monthIndex = 0;
+			}
 
 			string monthName = FinanceCalendar.FinanceCalendarWeekModel.ElementAt(monthIndex).Key;
-
-			int offset = 0;
 			int amountToDisplay = FinanceCalendar.FinanceCalendarWeekModel[monthName];
-
-
-
 			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year, CostCenterId);
-			if (monthIndex == 0)
+
+			if (monthIndex > 1)
 			{
-				ViewBag.PreviousMonth = monthIndex;
-			}
-			else
-			{
-				ViewBag.PreviousMonth = monthIndex - 1;
+
+				ViewBag.PreviousMonth = monthIndex-1;
 
 			}
 			if (monthIndex == 12)
@@ -68,6 +65,7 @@ namespace BudgetCalculator.Controllers
 
 
 			ViewBag.CurrentMonth = monthName;
+			ViewBag.CurrentMonthIndex = monthIndex;
 
 			//return RedirectToRoute(new 
 			//{

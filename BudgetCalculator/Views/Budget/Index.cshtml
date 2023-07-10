@@ -18,6 +18,7 @@
 		<tr>
 			
 			<th>Cost Center</th>
+			<th>Department</th>
 			<th>Year</th>
 
 			<th class="text-end pe-5">Actions</th>
@@ -30,6 +31,7 @@
 			<tr>
 			
 				<td>@budget.CostCenter.Name</td>
+				<td>@budget.CostCenter.Department.Name</td>
 				<td>@budget.Year</td>
 
 				<td>
@@ -48,7 +50,7 @@
 	</tbody>
 	<tfoot class="footer text-center text-muted table-secondary">
 		<tr>
-			<td colspan="3">Auto Generated table</td>
+			<td colspan="4">Auto Generated table</td>
 		</tr>
 	</tfoot>
 </table>
