@@ -15,11 +15,11 @@
 	string prevMonthDisable = string.Empty;
 	string activeMonth = string.Empty;
 
-	if (ViewBag.NextMonth == 12)
+	if (ViewBag.NextMonthIndex == 12)
 	{
 		nextMonthDisable = "disabled";
 	}
-	if (ViewBag.PreviousMonth == 0)
+	if (ViewBag.CurrentMonthIndex == 0)
 	{
 		prevMonthDisable = "disabled";
 	}
@@ -30,56 +30,58 @@
 }
 
 <div class="card border shadow ">
-	<div class="row d-flex justify-content-center g-0" style="font-size:14px;">
+	<div class="row d-flex justify-content-center g-0">
 		<div class=" row card-header g-0">
 			<div class="col-md-12 text-center g-0">
 				<h2 class="card-title  ">@departementName</h2>
-				<nav aria-label="page navigation " >
-
-
-					<ul class="pagination justify-content-center mt-3 ">
-
-						<li class="page-item @prevMonthDisable">
-
-							<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonth">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-
-
-						</li>
-						@foreach(var month in FinanceCalendar.FinanceCalendarWeekModel)
-						{
-							if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
-							{
-								activeMonth = "active";
-							}
-							else
-							{
-								activeMonth = string.Empty;
-							}
-
-							<li class="page-item @activeMonth">
-								<a class="text-center page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key)">
-									<span>@month.Key.Substring(0,3)</span>
-								</a>
-							</li>
-						}
-
-
-						<li class="page-item @nextMonthDisable">
-							<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonth">
-
-
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				
 						
 			</div>
 		</div>
 
-		
+		<div class="card-body g-0">
+			<nav aria-label="page navigation ">
+
+
+				<ul class="pagination justify-content-center">
+
+					<li class="page-item @prevMonthDisable">
+
+						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonthIndex">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+
+
+					</li>
+					@foreach (var month in FinanceCalendar.FinanceCalendarWeekModel)
+					{
+						if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
+						{
+							activeMonth = "active";
+						}
+						else
+						{
+							activeMonth = string.Empty;
+						}
+
+						<li class="page-item @activeMonth">
+							<a class="text-center page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key)">
+								<span>@month.Key.Substring(0,3)</span>
+							</a>
+						</li>
+					}
+
+
+					<li class="page-item @nextMonthDisable">
+						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonthIndex">
+
+
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
 			
 		
 
@@ -89,7 +91,7 @@
 
 
 
-			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3">
+			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
 
 				<div class="card">
 
@@ -98,7 +100,7 @@
 
 						<div class="card-header">
 							<h3 class="text-center card-title">
-								Week @week.WeekNumber Budget Card
+								Week @week.WeekNumber
 								<a class=" text-danger float-end" asp-action="Edit"><i class="bi bi-pencil-square"></i></a>
 							</h3>
 

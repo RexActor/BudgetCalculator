@@ -48,19 +48,22 @@ namespace BudgetCalculator.Controllers
 			int amountToDisplay = FinanceCalendar.FinanceCalendarWeekModel[monthName];
 			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year, CostCenterId);
 
-			if (monthIndex > 1)
+			if (monthIndex == 0)
 			{
-
-				ViewBag.PreviousMonth = monthIndex-1;
+				ViewBag.PreviousMonthIndex = monthIndex;
+			}
+			else
+			{
+				ViewBag.PreviousMonthIndex = monthIndex - 1;
 
 			}
 			if (monthIndex == 12)
 			{
-				ViewBag.NextMonth = monthIndex;
+				ViewBag.NextMonthIndex = monthIndex;
 			}
 			else
 			{
-				ViewBag.NextMonth = monthIndex + 1;
+				ViewBag.NextMonthIndex = monthIndex + 1;
 			}
 
 
