@@ -9,5 +9,6 @@ namespace BudgetCalculator.Data.Services
 		Task<IEnumerable<CostCenterEntity>> GetCostCenterDropDownValuesAsync();
 
 		Task<IEnumerable<DepartmentRoleEntity>> GetAllRoles();
+		Task UpdateRoleAsync(DepartmentRoleEntity departmentRoleEntity);
 	}
 }

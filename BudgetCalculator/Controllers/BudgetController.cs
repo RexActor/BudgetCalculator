@@ -45,7 +45,7 @@ namespace BudgetCalculator.Controllers
 			}
 
 			string monthName = FinanceCalendar.FinanceCalendarWeekModel.ElementAt(monthIndex).Key;
-			int amountToDisplay = FinanceCalendar.FinanceCalendarWeekModel[monthName];
+
 			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year, CostCenterId);
 
 			if (monthIndex == 0)
@@ -66,7 +66,7 @@ namespace BudgetCalculator.Controllers
 				ViewBag.NextMonthIndex = monthIndex + 1;
 			}
 
-			IEnumerable<DepartmentRoleEntity>roles = await _service.GetDepartmentRolesAsync(CostCenterId);
+			IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(CostCenterId);
 			List<string> roleNames = new List<string>();
 			if (!roles.Any())
 			{
@@ -79,13 +79,11 @@ namespace BudgetCalculator.Controllers
 			});
 
 
-
-
 			ViewBag.RolesList = roleNames;
 			ViewBag.CurrentMonth = monthName;
 			ViewBag.CurrentMonthIndex = monthIndex;
 
-			
+
 			return View(weeklyBudgets.Where(item => item.MonthName == monthName));
 		}
 
@@ -315,6 +313,10 @@ namespace BudgetCalculator.Controllers
 			return View(budgetList);
 		}
 
+		public IActionResult Edit()
+		{
+			return View();
+		}
 
 	}
 }

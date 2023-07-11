@@ -20,6 +20,7 @@
             <th>Role Department</th>
             <th>Created By:</th>
             <th>Created On:</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
@@ -35,6 +36,11 @@
                 <td>@role.CostCenter.Department.Name</td>
                 <td>@role.CreatedBy</td>
                 <td>@role.CreatedDate</td>
+                <td>
+                
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Update" asp-route-id="@role.Id">Update</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@role.Id">Delete</a>    
+                </td>
             </tr>
         }
 

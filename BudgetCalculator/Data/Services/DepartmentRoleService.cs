@@ -26,5 +26,24 @@ namespace BudgetCalculator.Data.Services
 
 			return costCenters;
 		}
+
+		public async Task UpdateRoleAsync(DepartmentRoleEntity departmentRoleEntity)
+		{
+			var departmentRoleDB = _context.DepartmentRoles.FirstOrDefault(item => item.Id == departmentRoleEntity.Id);
+
+
+			if (departmentRoleDB is not null)
+			{
+
+				departmentRoleDB.CostCenterId = departmentRoleEntity.CostCenterId;
+				departmentRoleDB.Description = departmentRoleEntity.Description;
+				departmentRoleDB.Name = departmentRoleEntity.Name;
+				departmentRoleDB.CreatedBy = departmentRoleEntity.CreatedBy;
+				departmentRoleDB.CreatedDate = departmentRoleEntity.CreatedDate;
+				
+			}
+
+			await _context.SaveChangesAsync();
+		}
 	}
 }
