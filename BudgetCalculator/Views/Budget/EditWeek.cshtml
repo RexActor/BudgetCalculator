@@ -35,8 +35,9 @@
 
 					<div class="card-header">
 						<h3 class="text-center card-title ">
-							@dayofWeek @dateOfDay
-								</h3>
+							<span class="fw-bolder">@dayofWeek</span>
+							<span class="fs-5 fw-bolder text-secondary text-decoration-underline">@dateOfDay</span>
+						</h3>
 
 					</div>
 
@@ -87,10 +88,10 @@
 							<table class="table table-borderless text-center">
 								<thead>
 									<tr class="table-bordered text-secondary" style="border-bottom: thin solid; border-color:gray;">
-										<th>Cost Centre</th>
+										<th title="Cost Center">CC</th>
 										<th>Direct Role</th>
-										<th>HC</th>
-										<th>Hrs per shift per person</th>
+										<th title="Head Count">HC</th>
+										<th>Hrs shift/person</th>
 										<th>Total Hours</th>
 									</tr>
 								</thead>
@@ -102,7 +103,7 @@
 									{
 
 										<tr class="text-success fw-bolder ">
-											<td class=""  title="Cost Center">@Model.CostCenter.Name</td>
+											<td class="" title="Cost Center">@Model.CostCenter.Name</td>
 											<td class="">@departmentRole</td>
 											<td class="" title="Head Count"><input class="form-control m-auto" type="number" placeholder="0" style="width:80px;"></td>
 											<td class=""><input class="form-control  m-auto" type="number" placeholder="0" style="width:80px;"></td>
@@ -111,7 +112,7 @@
 									}
 
 
-									<tr >
+									<tr>
 										<td></td>
 										<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
 										<td></td>
@@ -178,8 +179,8 @@
 	<div class="text-white align-text-top">
 		<a class="btn  btn-secondary" asp-controller="@controller" asp-action="Weekly" asp-action="Weekly" asp-route-year="@Model.Budget.Year" asp-route-costCenterId="@Model.Budget.CostCenter.Id" asp-route-monthIndex="@monthIndex">
 			<i class="bi bi-calendar-week" style=" vertical-align: 0.130em;"></i> Return To @Model.MonthName weekly view
-			</a>
-		
+		</a>
+
 
 	</div>
 }
