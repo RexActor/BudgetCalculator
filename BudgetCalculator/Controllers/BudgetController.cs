@@ -150,12 +150,6 @@ namespace BudgetCalculator.Controllers
 			}
 
 
-
-
-
-
-
-
 			await _service.CreateBudget(budget);
 
 
@@ -313,9 +307,34 @@ namespace BudgetCalculator.Controllers
 			return View(budgetList);
 		}
 
-		public IActionResult Edit()
+
+
+		//GET: EditWeek/{id}
+		[HttpGet]
+
+		public async Task<IActionResult> EditWeek(int id)
 		{
-			return View();
+			var weekBudget = await _service.GetWeeklyBudgetByIdAsync(id);
+			if(weekBudget is null) {
+				return View("CustomError", $"Couldn't find Weekly budget with ID {id}"); 
+			}
+
+			IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(weekBudget.CostCenter.Id);
+			List<string> roleNames = new List<string>();
+			if (!roles.Any())
+			{
+				roleNames.Add("DEFAULT ROLE");
+			}
+
+			roles.AsEnumerable().ToList().ForEach(role =>
+			{
+				roleNames.Add(role.Name);
+			});
+
+
+			ViewBag.RolesList = roleNames;
+
+			return View(weekBudget);
 		}
 
 	}
