@@ -19,5 +19,6 @@ namespace BudgetCalculator.Data
 		public DbSet<DepartmentEntity> Departments { get; set; }
 		public DbSet<BudgetEntity> Budgets { get; set; }
 		public DbSet<WeeklyBudget>WeeklyBudgets { get; set; }
+		public DbSet<DepartmentRoleEntity> DepartmentRoles { get; set; }
 	}
 }

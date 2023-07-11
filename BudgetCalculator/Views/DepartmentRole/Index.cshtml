@@ -1,0 +1,56 @@
+﻿
+@model IEnumerable<DepartmentRoleEntity>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h2 class="text-center">Cost Center Roles</h2>
+
+<table class="table ">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Role Name</th>
+            <th>Role Cost Center</th>
+            <th>Role Description</th>
+            <th>Role Department</th>
+            <th>Created By:</th>
+            <th>Created On:</th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+        @foreach(var role in Model)
+        {
+            <tr>
+
+                <td>@role.Name</td>
+                <td>@role.CostCenter.Name</td>
+                <td>@role.Description</td>
+                <td>@role.CostCenter.Department.Name</td>
+                <td>@role.CreatedBy</td>
+                <td>@role.CreatedDate</td>
+            </tr>
+        }
+
+
+
+    </tbody>
+
+</table>
+
+@{
+    var controller = ViewContext.RouteData.Values["controller"];
+}
+@section header{
+
+
+    <div class="text-white caption-top">
+        <a asp-controller="@controller" asp-action="Create" class="btn  btn-success"><i class="bi bi-plus-circle"></i> Add New</a>
+    </div>
+}

@@ -66,21 +66,26 @@ namespace BudgetCalculator.Controllers
 				ViewBag.NextMonthIndex = monthIndex + 1;
 			}
 
+			IEnumerable<DepartmentRoleEntity>roles = await _service.GetDepartmentRolesAsync(CostCenterId);
+			List<string> roleNames = new List<string>();
+			if (!roles.Any())
+			{
+				roleNames.Add("DEFAULT ROLE");
+			}
 
+			roles.AsEnumerable().ToList().ForEach(role =>
+			{
+				roleNames.Add(role.Name);
+			});
+
+
+
+
+			ViewBag.RolesList = roleNames;
 			ViewBag.CurrentMonth = monthName;
 			ViewBag.CurrentMonthIndex = monthIndex;
 
-			//return RedirectToRoute(new 
-			//{
-			//	controller="Budget",
-			//	action="Weekly",
-			//	CostCenterId = CostCenterId,
-			//	year =year,
-
-			//	monthIndex= monthIndex
-			//});
-
-			//return RedirectToAction(nameof(Weekly), new {year=year, CostCenterId= CostCenterId, monthIndex = monthIndex});
+			
 			return View(weeklyBudgets.Where(item => item.MonthName == monthName));
 		}
 

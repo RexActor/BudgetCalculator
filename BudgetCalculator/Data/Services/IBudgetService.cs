@@ -14,5 +14,6 @@ namespace BudgetCalculator.Data.Services
 		Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year,int costCenterId);
 		Task<IEnumerable<WeeklyBudget>>GetWeeklyBudgetAsync(int year,int costCenterId);
 		Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync();
+		Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId);
 	}
 }

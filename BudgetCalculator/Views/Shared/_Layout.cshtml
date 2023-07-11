@@ -43,16 +43,22 @@
 
 
 
+
 								<li class="dropdown-header text-center"><span class="fw-bold">Cost Centers</span></li>
 								<li><hr class="dropdown-divider" /></li>
-								<li><a class="dropdown-item nav-link" asp-action="Index" asp-controller="CostCenter">View</a></li>
-								<li><a class="dropdown-item nav-link" asp-action="Create" asp-controller="CostCenter">Create</a></li>
+								<li><a class="dropdown-item nav-link" asp-controller="CostCenter" asp-action="Index">View</a></li>
+								<li><a class="dropdown-item nav-link" asp-controller="CostCenter" asp-action="Create">Create</a></li>
+
+								<li class="dropdown-header text-center"><span class="fw-bold">Roles</span></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item nav-link" asp-controller="DepartmentRole" asp-action="Index">View Roles</a></li>
+								<li><a class="dropdown-item nav-link" asp-controller="DepartmentRole" asp-action="Create">Create Role</a></li>
 
 
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Departments</span></li>
 								<li><hr class="dropdown-divider" /></li>
-								<li><a class="dropdown-item nav-link" asp-action="Index" asp-controller="Departments">Manage Departments</a></li>
+								<li><a class="dropdown-item nav-link" asp-controller="Departments" asp-action="Index">Manage Departments</a></li>
 
 							</ul>
 

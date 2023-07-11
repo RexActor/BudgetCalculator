@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICostCenterService, CostCenterService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentRoleService, DepartmentRoleService>();
 builder.Services.AddSingleton<TelegramService>();
 builder.Services.AddHostedService<TelegramService>(p=>p.GetRequiredService<TelegramService>());
 //builder.Services.AddHostedService<TelegramService>();
