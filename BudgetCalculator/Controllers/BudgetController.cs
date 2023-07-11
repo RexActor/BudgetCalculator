@@ -320,6 +320,17 @@ namespace BudgetCalculator.Controllers
 				return View("CustomError", $"Couldn't find Weekly budget with ID {id}");
 			}
 
+
+			Dictionary<int,int>MonhtlyWeeks = new Dictionary<int,int>();
+
+			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: weekBudget.Budget.Year, costCenterId: weekBudget.CostCenter.Id);
+
+			weeklyBudgets.AsEnumerable().Where(item=>item.MonthName==weekBudget.MonthName).ToList().ForEach(item =>
+			{
+				MonhtlyWeeks.Add(item.WeekNumber, item.Id);
+			});
+
+
 			IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weekBudget.CostCenter.Id);
 			List<string> roleNames = new List<string>();
 			if (!roles.Any())
@@ -334,7 +345,7 @@ namespace BudgetCalculator.Controllers
 
 
 			ViewBag.RolesList = roleNames;
-
+			ViewBag.WeeklyBudgets = MonhtlyWeeks;
 			return View(weekBudget);
 		}
 

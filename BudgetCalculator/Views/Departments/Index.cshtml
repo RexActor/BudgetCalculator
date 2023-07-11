@@ -6,74 +6,81 @@
 @{
 	ViewData["Title"] = "Departments";
 }
-<h1 class="text-center">Departments</h1>
 
-<div class="row">
-
-
-	@foreach (var department in Model)
-	{
-		<div class="col-md-3 col-xs-6 mb-3 mt-3">
-			<div class="card">
-				<div class="card-header ">
-					<span class="float-start text-muted " style="font-size:0.6rem;">ID:@department.Id</span>
-					<h3 class="text-center">
-						<span class=" d-inline-block text-truncate" style="max-width:180px;">@department.Name</span>
-						<a class=" float-end  text-danger ms-2" style=" font-size:1.5rem;" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash"></i></a>
-						<a class="float-end  text-success" style=" font-size:1.5rem;" asp-action="Update" asp-route-id="@department.Id"><i class="bi  bi-pencil-square"></i></a>
+<div class="card shadow">
+	<div class="row g-0">
+		<div class="card-header text-light fw-bolder" style="background-color:slategray">
+			<h1 class="text-center">Departments</h1>
+		</div>
 
 
-					</h3>
 
-				</div>
-				<div class="col-md-12">
+		@foreach (var department in Model)
+		{
+			<div class="col-md-3 col-xs-6 mb-3 mt-3 g-3">
+				<div class="card">
+					<div class="card-header ">
+						<span class="float-start text-muted " style="font-size:0.6rem;">ID:@department.Id</span>
+						<h3 class="text-center">
+							<span class=" d-inline-block text-truncate" style="max-width:180px;">@department.Name</span>
+							<a class=" float-end  text-danger ms-2" style=" font-size:1.5rem;" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash"></i></a>
+							<a class="float-end  text-success" style=" font-size:1.5rem;" asp-action="Update" asp-route-id="@department.Id"><i class="bi  bi-pencil-square"></i></a>
 
-					<div class="card-body">
-						<table class="table table-borderless">
-							<thead>
-								<tr>
-									<th>Department Name</th>
-									<th></th>
-									<th></th>
-								</tr>
-							</thead>
 
-							<tbody>
-								<tr>
-									<td>@department.Name</td>
-
-								</tr>
-								<tr class="border-bottom">
-									<td colspan="2" class="float-start fw-bold">Description:</td>
-								</tr>
-								<tr>
-									<td colspan="2" class="text-center">
-										@department.Description
-									</td>
-								</tr>
-							</tbody>
-
-						</table>
+						</h3>
 
 					</div>
-					<hr />
+					<div class="col-md-12">
+
+						<div class="card-body">
+							<table class="table table-borderless">
+								<thead>
+									<tr>
+										<th>Department Name</th>
+										<th></th>
+										<th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr>
+										<td>@department.Name</td>
+
+									</tr>
+									<tr class="border-bottom">
+										<td colspan="2" class="float-start fw-bold">Description:</td>
+									</tr>
+									<tr>
+										<td colspan="2" class="text-center">
+											@department.Description
+										</td>
+									</tr>
+								</tbody>
+
+							</table>
+
+						</div>
+						<hr />
 
 
+					</div>
+					<div class="card-footer">
+						<span class="text-muted">Created by: @department.CreatedBy on @department.CreatedDate.Value.ToShortDateString() </span>
+
+						@if (department.LastUpdatedAt != null && department.LastUpdatedBy != null)
+						{
+							<span class="text-muted">Updated by: @department.LastUpdatedBy on @department.LastUpdatedAt.Value.ToShortDateString()</span>
+						}
+
+					</div>
 				</div>
-				<div class="card-footer">
-					<span class="text-muted">Created by: @department.CreatedBy on @department.CreatedDate.Value.ToShortDateString() </span>
 
-					@if (department.LastUpdatedAt != null && department.LastUpdatedBy != null)
-					{
-						<span class="text-muted">Updated by: @department.LastUpdatedBy on @department.LastUpdatedAt.Value.ToShortDateString()</span>
-					}
-
-				</div>
 			</div>
-
+		}
+		<div class="card-footer fw-bolder" style="background-color:slategray">
+			<h1 class="text-center text-white fs-5 float-end">@DateTime.Now.ToShortDateString()</h1>
 		</div>
-	}
-
+	</div>
 
 </div>
 
@@ -96,4 +103,4 @@
 	<div class="text-white caption-top">
 		<a asp-controller="@controller" asp-action="Create" class="btn  btn-success"><i class="bi bi-plus-circle"></i> Add New</a>
 	</div>
-}
+	}

@@ -19,7 +19,7 @@
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" >
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -27,7 +27,7 @@
 						<li class="nav-item dropdown">
 
 							<a class="nav-link text-dark dropdown-toggle" href="#" data-bs-toggle="dropdown" id="dropdownMenuLink" role="button" aria-expanded="false"><i class="bi bi-sliders"></i> Management</a>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
 
 								<li class="dropdown-header text-center"><span class="fw-bold">Budget</span></li>
 								<li><hr class="dropdown-divider" /></li>
@@ -70,10 +70,25 @@
 	</header>
 	<div class="row g-0">
 		<div class="col-md-2 d-none d-lg-block">
-			<div class="container  position-sticky">
+			<div class="container ">
+				
+
+			</div>
+
+
+		</div>
+		<div class="col-md-8">
+			<div class="container">
+				<main role="main" class="pb-3">
+					@RenderBody()
+				</main>
+			</div>
+		</div>
+		<div class="col-md-2 d-none d-lg-block">
+			<div class="container sticky-top ">
 				@if (IsSectionDefined("header"))
 				{
-					<div class="card">
+					<div class="card me-3">
 						<div class="card-header text-center">
 							<h4>Menu</h4>
 						</div>
@@ -88,21 +103,6 @@
 						</div>
 					</div>
 				}
-
-			</div>
-
-
-		</div>
-		<div class="col-md-8">
-			<div class="container">
-				<main role="main" class="pb-3">
-					@RenderBody()
-				</main>
-			</div>
-		</div>
-		<div class="col-md-2 d-none d-lg-block">
-			<div class="container">
-				Right Side
 			</div>
 		</div>
 	</div>
