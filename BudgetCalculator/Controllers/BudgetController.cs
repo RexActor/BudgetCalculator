@@ -75,7 +75,7 @@ namespace BudgetCalculator.Controllers
 
 			roles.AsEnumerable().ToList().ForEach(role =>
 			{
-				roleNames.Add(role.Name);
+				roleNames.Add(role.Name ?? default!);
 			});
 
 
@@ -110,7 +110,7 @@ namespace BudgetCalculator.Controllers
 
 			foreach (var department in departments)
 			{
-				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item!.Department.Name == department.Name).ToList().ForEach(item =>
 				{
 					costCenterList.Add(new SelectListItem
 					{
@@ -283,7 +283,7 @@ namespace BudgetCalculator.Controllers
 					if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
 					{
 						departments.Add(
-							new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+							new SelectListGroup { Name = dropDown!.Department!.Name.ToString() }
 							);
 					}
 				}
@@ -291,7 +291,7 @@ namespace BudgetCalculator.Controllers
 
 			foreach (var department in departments)
 			{
-				budgetDropDowns?.CostCenters?.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				budgetDropDowns?.CostCenters?.AsEnumerable().Where(item => item!.Department!.Name == department.Name).ToList().ForEach(item =>
 				{
 					costCenterList.Add(new SelectListItem
 					{
@@ -321,17 +321,17 @@ namespace BudgetCalculator.Controllers
 			}
 
 
-			Dictionary<int,int>MonhtlyWeeks = new Dictionary<int,int>();
+			Dictionary<int, int> MonhtlyWeeks = new Dictionary<int, int>();
 
-			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: weekBudget.Budget.Year, costCenterId: weekBudget.CostCenter.Id);
+			var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: weekBudget!.Budget!.Year, costCenterId: weekBudget!.CostCenter!.Id);
 
-			weeklyBudgets.AsEnumerable().Where(item=>item.MonthName==weekBudget.MonthName).ToList().ForEach(item =>
+			weeklyBudgets.AsEnumerable().Where(item => item.MonthName == weekBudget.MonthName).ToList().ForEach(item =>
 			{
 				MonhtlyWeeks.Add(item.WeekNumber, item.Id);
 			});
 
 
-			IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weekBudget.CostCenter.Id);
+			IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weekBudget!.CostCenter!.Id);
 			List<string> roleNames = new List<string>();
 			if (!roles.Any())
 			{
@@ -340,7 +340,7 @@ namespace BudgetCalculator.Controllers
 
 			roles.AsEnumerable().ToList().ForEach(role =>
 			{
-				roleNames.Add(role.Name);
+				roleNames.Add(role.Name ?? default!);
 			});
 
 
