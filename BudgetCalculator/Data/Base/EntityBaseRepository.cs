@@ -39,8 +39,13 @@ namespace BudgetCalculator.Data.Base
 
 		public async Task<T> GetByIdAsync(int id)
 		{
-			return await _context.Set<T>().FirstOrDefaultAsync(item => item.Id == id);
+			var result = await _context.Set<T>().FirstOrDefaultAsync(item => item.Id == id);
+
+
+			return result is not null ? result : default!;
 		}
+
+
 
 		public async Task<T> UpdateAsync(T entity)
 		{

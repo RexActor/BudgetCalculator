@@ -6,7 +6,7 @@ namespace BudgetCalculator.Models
 	{
 
 		public int Id { get; set; }
-		public string MonthName { get; set; }
+		public string? MonthName { get; set; }
 
 		public int Cases { get; set; }
 		public int DirectProductiveHours { get; set; }

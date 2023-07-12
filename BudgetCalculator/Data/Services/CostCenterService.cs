@@ -44,7 +44,7 @@ namespace BudgetCalculator.Data.Services
 			var result = await _context.CostCenters.Include(item => item.Department).FirstOrDefaultAsync(item => item.Id == id);
 
 
-			return result;
+			return result is not null ? result : default!;
 
 
 
