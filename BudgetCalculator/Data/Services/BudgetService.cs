@@ -41,7 +41,7 @@ namespace BudgetCalculator.Data.Services
 					CostCenter = costCenter,
 					AgencyProductiveHours = item.AgencyProductiveHours,
 					DirectProductiveHours = item.DirectProductiveHours,
-					MonthName = item.MonthName,
+					MonthName = item.MonthName ?? default!,
 					Year = entity.Year
 				});
 			});

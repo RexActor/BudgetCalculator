@@ -17,12 +17,12 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task<IEnumerable<DepartmentRoleEntity>> GetAllRoles()
 		{
-			return await _context.DepartmentRoles.Include(item => item.CostCenter).ThenInclude(item => item.Department).ToListAsync();
+			return await _context.DepartmentRoles.Include(item => item!.CostCenter).ThenInclude(item => item!.Department).ToListAsync();
 		}
 
 		public async Task<IEnumerable<CostCenterEntity>> GetCostCenterDropDownValuesAsync()
 		{
-			var costCenters = await _context.CostCenters.Include(item=>item.Department).ToListAsync();
+			var costCenters = await _context.CostCenters.Include(item => item.Department).ToListAsync();
 
 			return costCenters;
 		}
@@ -36,11 +36,11 @@ namespace BudgetCalculator.Data.Services
 			{
 
 				departmentRoleDB.CostCenterId = departmentRoleEntity.CostCenterId;
-				departmentRoleDB.Description = departmentRoleEntity.Description;
-				departmentRoleDB.Name = departmentRoleEntity.Name;
-				departmentRoleDB.CreatedBy = departmentRoleEntity.CreatedBy;
+				departmentRoleDB.Description = departmentRoleEntity.Description ?? default!;
+				departmentRoleDB.Name = departmentRoleEntity.Name ?? default!;
+				departmentRoleDB.CreatedBy = departmentRoleEntity.CreatedBy ?? default!;
 				departmentRoleDB.CreatedDate = departmentRoleEntity.CreatedDate;
-				
+
 			}
 
 			await _context.SaveChangesAsync();

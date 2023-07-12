@@ -12,7 +12,7 @@ namespace BudgetCalculator.Models
 
         [DisplayName("Cost Center")]
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public string? Description { get; set; } = null;
 

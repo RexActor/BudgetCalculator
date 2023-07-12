@@ -4,9 +4,9 @@
 @{
 
 	ViewData["Title"] = "Budget View";
-	var firstDate = new DateTime(Model.Budget.Year - 1, 12, 31);
+	var firstDate = new DateTime(Model!.Budget!.Year - 1, 12, 31);
 	var weekComencingDate = @firstDate.AddDays((@Model.WeekNumber - 1) * 7);
-	int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName);
+	int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName ?? default!);
 	var prevWeekDisable = "disabled";
 	var nextWeekDisable = "disabled";
 
@@ -106,7 +106,7 @@
 										{
 
 											<tr class="text-success fw-bolder ">
-												<td class="" title="Cost Center">@Model.CostCenter.Name</td>
+												<td class="" title="Cost Center">@Model!.CostCenter!.Name</td>
 												<td class="">@departmentRole</td>
 												<td class="" title="Head Count"><input class="form-control m-auto" type="number" placeholder="0" style="width:80px;"></td>
 												<td class=""><input class="form-control  m-auto" type="number" placeholder="0" style="width:80px;"></td>
