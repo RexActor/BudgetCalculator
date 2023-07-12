@@ -65,9 +65,15 @@
 
 					</div>
 					<div class="card-footer">
-						<span class="text-muted">Created by: @department.CreatedBy on @department.CreatedDate.Value.ToShortDateString() </span>
 
-						@if (department.LastUpdatedAt != null && department.LastUpdatedBy != null)
+						@{
+							var createdDate = department?.CreatedDate;
+							var createdDateString = createdDate.HasValue ? createdDate.Value.ToShortDateString() : string.Empty;
+						}
+
+						<span class="text-muted">Created by: @department?.CreatedBy on @createdDateString </span>
+
+						@if (department?.LastUpdatedAt != null && department.LastUpdatedBy != null)
 						{
 							<span class="text-muted">Updated by: @department.LastUpdatedBy on @department.LastUpdatedAt.Value.ToShortDateString()</span>
 						}

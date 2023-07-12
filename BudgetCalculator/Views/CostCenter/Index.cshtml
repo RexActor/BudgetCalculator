@@ -11,7 +11,7 @@
 }
 
 
-<div class="card shadow" >
+<div class="card shadow">
 	<div class="row g-0">
 		<div class="card-header text-light fw-bolder" style="background-color:slategray">
 			<h1 class="text-center">Cost Centers</h1>
@@ -67,9 +67,15 @@
 
 					</div>
 					<div class="card-footer">
-						<span class="text-muted">Created by: @costCenter.CreatedBy on @costCenter.CreatedAt.Value.ToShortDateString() </span>
+						@{
+							var createdAt = costCenter?.CreatedAt;
+							var createdAtString = createdAt.HasValue ? createdAt.Value.ToShortDateString() : string.Empty;
 
-						@if (costCenter.LastUpdatedAt != null && costCenter.LastUpdatedBy != null)
+						
+						}
+						<span class="text-muted">Created by: @costCenter?.CreatedBy on @createdAtString </span>
+
+						@if (costCenter?.LastUpdatedAt != null && costCenter.LastUpdatedBy != null)
 						{
 							<span class="text-muted">Updated by: @costCenter.LastUpdatedBy on @costCenter.LastUpdatedAt.Value.ToShortDateString()</span>
 						}

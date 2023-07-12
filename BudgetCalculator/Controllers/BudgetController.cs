@@ -146,7 +146,7 @@ namespace BudgetCalculator.Controllers
 
 			if (budgetDb is null)
 			{
-				return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb.CostCenterId}");
+				return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb?.CostCenterId}");
 			}
 
 
@@ -187,7 +187,7 @@ namespace BudgetCalculator.Controllers
 
 			foreach (var department in departments)
 			{
-				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				budgetDropDowns.CostCenters?.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
 				{
 					costCenterList.Add(new SelectListItem
 					{
@@ -232,7 +232,7 @@ namespace BudgetCalculator.Controllers
 
 			foreach (var department in departments)
 			{
-				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				budgetDropDowns.CostCenters?.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
 				{
 					costCenterList.Add(new SelectListItem
 					{
@@ -291,7 +291,7 @@ namespace BudgetCalculator.Controllers
 
 			foreach (var department in departments)
 			{
-				budgetDropDowns.CostCenters.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+				budgetDropDowns?.CostCenters?.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
 				{
 					costCenterList.Add(new SelectListItem
 					{

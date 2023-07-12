@@ -1,70 +1,44 @@
 ﻿@model BudgetCalculator.Models.WeeklyBudget;
 @using BudgetCalculator.Finance.Calendar;
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
 
 	ViewData["Title"] = "Budget View";
 	var firstDate = new DateTime(Model.Budget.Year - 1, 12, 31);
-
 	var weekComencingDate = @firstDate.AddDays((@Model.WeekNumber - 1) * 7);
-
 	int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName);
-
 	var prevWeekDisable = "disabled";
 	var nextWeekDisable = "disabled";
-	var activeLink = string.Empty;
-
 
 }
 
 <div class="card shadow ">
 	<div class="row justify-content-center g-0">
-
-
-
 		<div class="card-header text-center ">
 			<h2>@Model.Budget.MonthName Week @Model.WeekNumber Daily Split</h2>
 		</div>
 
-
 		<div class="card-body g-0 sticky-top ">
 			<nav aria-label="page navigation ">
-
-
 				<ul class="pagination justify-content-center">
-
 					<li class="page-item @prevWeekDisable">
-
 						<a class="page-link" asp-action="EditWeek" asp-route-id="">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
-
 					</li>
-					@foreach (var week in ViewBag.WeeklyBudgets as Dictionary<int,int>)
+					@if (ViewBag.WeeklyBudgets is not null)
 					{
-						if (week.Key == Model.WeekNumber)
+						@foreach (var week in ViewBag.WeeklyBudgets)
 						{
-							activeLink = "active";
+							var activeLink = week.Key == Model.WeekNumber ? "active" : "";
+							<li class="page-item @activeLink">
+								<a class="text-center page-link" asp-action="EditWeek" asp-route-id="@week.Value">WK @week.Key</a>
+							</li>
 						}
-						else
-						{
-							activeLink = string.Empty;
-						}
-						<li class="page-item @activeLink">
-							<a class="text-center page-link" asp-action="EditWeek" asp-route-id="@week.Value">WK @week.Key</a>
-						</li>
-						
 					}
-
-			
-
 
 					<li class="page-item @nextWeekDisable">
 						<a class="page-link" asp-action="EditWeek" asp-route-id="">
-
-
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>
@@ -72,72 +46,49 @@
 			</nav>
 		</div>
 
-
 		@for (int i = 0; i < 7; i++)
 		{
-
 			var dayofWeek = @weekComencingDate.AddDays(i).DayOfWeek;
 			var dateOfDay = @weekComencingDate.AddDays(i).ToShortDateString();
 
 			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
-
 				<div class="card">
-
 					<div class="row bg-light g-0 ">
-
-
 						<div class="card-header">
 							<h3 class="text-center card-title ">
 								<span class="fw-bolder">@dayofWeek</span>
 								<span class="fs-5 fw-bolder text-secondary text-decoration-underline">@dateOfDay</span>
 							</h3>
-
 						</div>
-
-
 
 						<div class="col-md-6">
 							<div class="card-body">
-
-
 								<p class="card-text text-secondary"><b>WC date:</b><span class="text-success fw-bolder"> @weekComencingDate.ToShortDateString()</span> </p>
 								<p class="card-text text-secondary"><b>Week:</b><span class="text-success fw-bolder"> @Model.WeekNumber</span></p>
 								<p class="card-text text-secondary"><b>Month:</b><span class="text-success fw-bolder"> @Model.MonthName</span></p>
-
-
 							</div>
 						</div>
 
 						<div class="col-md-6">
 							<div class="card-body">
-
 								@{
 									double TotalWeeklyProductiveHours = (Model.AgencyProductiveHours + Model.DirectProductiveHours);
 									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)Model.Cases)) * 60, 3);
 									double TotalMinutes = Math.Round(Model.Cases * allowedMinutesPerCase, 3);
 									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
 								}
-
 								<div class="form-floating">
 									<input class="form-control-sm mb-2 " title="Number of Cases/Day" placeholder="Number of Cases/Day" />
 								</div>
-
 								<p class="card-text text-secondary"><b>Av. Monthly mins/case:</b><span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
 								<p class="card-text text-secondary"><b>Total Minutes:</b> {minutes}</p>
 								<p class="card-text text-secondary"><b>Hours Allowed:</b> {hours}</p>
-
 							</div>
-
 						</div>
 
-
 						<div class="row">
-
 							<div class="col-md-12">
-
-
 								<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
-
 								<table class="table table-borderless text-center">
 									<thead>
 										<tr class="table-bordered text-secondary" style="border-bottom: thin solid; border-color:gray;">
@@ -148,7 +99,6 @@
 											<th>Total Hours</th>
 										</tr>
 									</thead>
-
 
 									<tbody>
 
@@ -164,16 +114,12 @@
 											</tr>
 										}
 
-
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
 											<td></td>
 											<td class="text-center" style="border-bottom: thin solid; border-color:gray;"><span class="fw-bolder">{total Hours}</span></td>
-
 										</tr>
-
-
 										<tr>
 											<td class="text-end text-secondary" colspan="3"><b>Agency Hours:</b></td>
 											<td class="text-center"><span class="fw-bolder">{total Hours}</span></td>
@@ -185,38 +131,17 @@
 											<td class="text-center" style="border-bottom: thin solid; border-color:gray;" colspan="1"><span class="fw-bolder">{Head Count}</span></td>
 											<td></td>
 										</tr>
-
-
-
 									</tbody>
-
 								</table>
-
-
-
-
-
 							</div>
-
 
 						</div>
 						<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
 							<span>
-
 								Last Updated: @DateTime.Now.ToLongDateString() by {User}
-
-
 							</span>
 						</div>
-
 					</div>
-
-
-
-
-
-
-
 				</div>
 			</div>
 		}
@@ -229,12 +154,9 @@
 }
 @section header{
 
-
 	<div class="text-white align-text-top">
 		<a class="btn  btn-secondary" asp-controller="@controller" asp-action="Weekly" asp-action="Weekly" asp-route-year="@Model.Budget.Year" asp-route-costCenterId="@Model.Budget.CostCenter.Id" asp-route-monthIndex="@monthIndex">
 			<i class="bi bi-calendar-week" style=" vertical-align: 0.130em;"></i> Return To @Model.MonthName weekly view
 		</a>
-
-
 	</div>
 }

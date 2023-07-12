@@ -92,7 +92,7 @@ namespace BudgetCalculator.Data.Services
 		public async Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync()
 		{
 
-			var budgetList = new List<BudgetEntity>();
+			
 			var result = await _context.Budgets.Include(item => item.CostCenter).ThenInclude(item => item.Department).GroupBy(c => c.CostCenter).Select(item => item.First()).ToListAsync();
 			return result;
 		}
@@ -130,10 +130,11 @@ namespace BudgetCalculator.Data.Services
 
 				});
 			});
-			budgetView.CostCenterId = budgetDB.FirstOrDefault().CostCenter.Id;
-			budgetView.Year = budgetDB.FirstOrDefault().Year;
+
+			budgetView.CostCenterId = budgetDB.FirstOrDefault()?.CostCenter?.Id ?? 0;
+			budgetView.Year = budgetDB.FirstOrDefault()?.Year ?? 0;
 			budgetView.MonthBudgets = monthBudget;
-			budgetView.Id = budgetDB.FirstOrDefault().Id;
+			budgetView.Id = budgetDB.FirstOrDefault()?.Id ?? 0;
 
 			return budgetView;
 
@@ -158,7 +159,7 @@ namespace BudgetCalculator.Data.Services
 
 		public async Task UpdateBudget(BudgetEntityVM entity)
 		{
-			
+
 
 			var costCenter = await _context.CostCenters.FirstOrDefaultAsync(item => item.Id == entity.CostCenterId);
 			if (costCenter is null)
@@ -191,7 +192,7 @@ namespace BudgetCalculator.Data.Services
 						weeklyBudget.MonthName = item.MonthName;
 						weeklyBudget.DirectProductiveHours = item.DirectProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[item.MonthName];
 						weeklyBudget.AgencyProductiveHours = item.AgencyProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[item.MonthName];
-						//weeklyBudget.WeekNumber = weeklyBudget.WeekNumber;
+					
 						weeklyBudget.Budget = objectInDB;
 					}
 

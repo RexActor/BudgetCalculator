@@ -8,12 +8,8 @@
 	ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
 	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
 	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
-	string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault();
-
-	
-
+	string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault()??"Unknown";
 	var firstDate = new DateTime(BudgetYear-1, 12, 31);
-
 	string nextMonthDisable = string.Empty;
 	string prevMonthDisable = string.Empty;
 	string activeMonth = string.Empty;
@@ -26,8 +22,6 @@
 	{
 		prevMonthDisable = "disabled";
 	}
-
-
 }
 
 <div class="card border shadow ">
@@ -40,17 +34,14 @@
 
 		<div class="card-body g-0 sticky-top ">
 			<nav aria-label="page navigation ">
-
-
 				<ul class="pagination justify-content-center">
-
 					<li class="page-item @prevMonthDisable">
 
 						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.PreviousMonthIndex">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
-
 					</li>
+
 					@foreach (var month in FinanceCalendar.FinanceCalendarWeekModel)
 					{
 						if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
@@ -69,11 +60,8 @@
 						</li>
 					}
 
-
 					<li class="page-item @nextMonthDisable">
 						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonthIndex">
-
-
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>
@@ -81,13 +69,10 @@
 			</nav>
 		</div>
 
-
-
 		@foreach (var week in Model)
 		{
 
 			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
-
 				<div class="card">
 					<div class="row bg-light g-0 ">
 						<div class="card-header">
@@ -118,11 +103,9 @@
 								<p class="text-secondary">
 									<b>Cases/Week:</b><span class="text-success fw-bolder"> @week.Cases </span>
 								</p>
-
 								<p class="text-secondary"><b>Av. mins/case:</b> <span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
 								<p class="text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes</span></p>
 								<p class="text-secondary"><b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###")</span></p>
-
 							</div>
 						</div>
 
