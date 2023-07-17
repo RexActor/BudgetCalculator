@@ -20,4 +20,5 @@ public class AppDBContext : DbContext
 	public DbSet<BudgetEntity> Budgets { get; set; }
 	public DbSet<WeeklyBudget>WeeklyBudgets { get; set; }
 	public DbSet<DepartmentRoleEntity> DepartmentRoles { get; set; }
+	public DbSet<DailyBudget> DailyBudgets { get; set;}
 }

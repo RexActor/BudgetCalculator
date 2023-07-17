@@ -1,5 +1,6 @@
-﻿@model BudgetCalculator.Models.WeeklyBudget;
+﻿@model BudgetCalculator.Data.ViewModels.WeeklyBudgetVM;
 @using BudgetCalculator.Finance.Calendar;
+@using BudgetCalculator.Models;
 
 @{
 
@@ -10,10 +11,14 @@
 	var prevWeekDisable = "disabled";
 	var nextWeekDisable = "disabled";
 
+
+
+
+
 }
 
 <div class="card shadow ">
-	<div class="row justify-content-center g-0">
+	<div class="row m-auto g-0 justify-content-center">
 		<div class="card-header text-center ">
 			<h2>@Model.Budget.MonthName Week @Model.WeekNumber Daily Split</h2>
 		</div>
@@ -51,6 +56,14 @@
 			var dayofWeek = @weekComencingDate.AddDays(i).DayOfWeek;
 			var dateOfDay = @weekComencingDate.AddDays(i).ToShortDateString();
 
+			var casesOfday = Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyCases).FirstOrDefault();
+			double TotalDailyMinutes = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyTotalMinutes).FirstOrDefault() * 1000) / 1000;
+			double TotalDailyHoursAllowed = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyAllowedHours).FirstOrDefault() * 1000) / 1000;
+
+			double totalHorsForDay = 0;
+			double AgencyHoursAvailable = 0;
+
+
 			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
 				<div class="card">
 					<div class="row bg-light g-0 ">
@@ -58,6 +71,7 @@
 							<h3 class="text-center card-title ">
 								<span class="fw-bolder">@dayofWeek</span>
 								<span class="fs-5 fw-bolder text-secondary text-decoration-underline">@dateOfDay</span>
+								<a asp-action="CompleteDate" asp-route-week="@Model.WeekNumber" asp-route-budgetId="@Model.Id" asp-route-date="@dateOfDay"><span class="float-end text-success"><i class="bi bi-clipboard-check"></i></span></a>
 							</h3>
 						</div>
 
@@ -74,15 +88,14 @@
 								@{
 									double TotalWeeklyProductiveHours = (Model.AgencyProductiveHours + Model.DirectProductiveHours);
 									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)Model.Cases)) * 60, 3);
-									double TotalMinutes = Math.Round(Model.Cases * allowedMinutesPerCase, 3);
-									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
+
 								}
 								<div class="form-floating">
-									<input class="form-control-sm mb-2 " title="Number of Cases/Day" placeholder="Number of Cases/Day" />
+									<p class="card-text text-secondary"><b>Cases: </b><span class="text-success fw-bolder">@casesOfday</span></p>
 								</div>
 								<p class="card-text text-secondary"><b>Av. Monthly mins/case:</b><span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
-								<p class="card-text text-secondary"><b>Total Minutes:</b> {minutes}</p>
-								<p class="card-text text-secondary"><b>Hours Allowed:</b> {hours}</p>
+								<p class="card-text text-secondary"><b>Total Minutes:</b> <span class="text-success fw-bolder">@TotalDailyMinutes</span></p>
+								<p class="card-text text-secondary"><b>Hours Allowed:</b>  <span class="text-success fw-bolder">@TotalDailyHoursAllowed</span></p>
 							</div>
 						</div>
 
@@ -102,33 +115,57 @@
 
 									<tbody>
 
-										@foreach (var departmentRole in ViewBag.RolesList)
-										{
 
-											<tr class="text-success fw-bolder ">
-												<td class="" title="Cost Center">@Model!.CostCenter!.Name</td>
-												<td class="">@departmentRole</td>
-												<td class="" title="Head Count"><input class="form-control m-auto" type="number" placeholder="0" style="width:80px;"></td>
-												<td class=""><input class="form-control  m-auto" type="number" placeholder="0" style="width:80px;"></td>
-												<td class="">{total Hours}</td>
-											</tr>
+										@for (int x = 0; x < Model.dailyBudgets.Count; x++)
+										{
+											if (@Model.dailyBudgets[x].budgetDate == DateTime.Parse(dateOfDay))
+											{
+												for (int b = 0; b < Model.dailyBudgets[x].DailyRoles.Count; b++)
+												{
+
+													<tr class="text-success fw-bolder ">
+														<td class="" title="Cost Center">@Model!.CostCenter!.Name</td>
+														<td class="">@Model.dailyBudgets[x].DailyRoles[b].Name</td>
+														<td class="" title="Head Count"> @Model.dailyBudgets[x].DailyRoles[b].DailyHeadCountOfRole</td>
+														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyHoursOfRole</td>
+														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole  </td>
+													</tr>
+													totalHorsForDay += @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole;
+												}
+
+											}
 										}
+
+
+
+
 
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
 											<td></td>
-											<td class="text-center" style="border-bottom: thin solid; border-color:gray;"><span class="fw-bolder">{total Hours}</span></td>
+
+
+
+
+											<td class="text-center" style="border-bottom: thin solid; border-color:gray;"><span class="fw-bolder">@totalHorsForDay</span></td>
 										</tr>
 										<tr>
+											@{
+
+												AgencyHoursAvailable = TotalDailyHoursAllowed - totalHorsForDay < 0 ? 0 : TotalDailyHoursAllowed - totalHorsForDay;
+
+												var AgencyHeadCount = Math.Floor(AgencyHoursAvailable / 8);
+
+											}
 											<td class="text-end text-secondary" colspan="3"><b>Agency Hours:</b></td>
-											<td class="text-center"><span class="fw-bolder">{total Hours}</span></td>
+											<td class="text-center"><span class="fw-bolder">@Math.Floor(AgencyHoursAvailable)</span></td>
 											<td></td>
 										</tr>
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Agency Available:</b></td>
-											<td class="text-center" style="border-bottom: thin solid; border-color:gray;" colspan="1"><span class="fw-bolder">{Head Count}</span></td>
+											<td class="text-center" style="border-bottom: thin solid; border-color:gray;" colspan="1"><span class="fw-bolder">@AgencyHeadCount</span></td>
 											<td></td>
 										</tr>
 									</tbody>

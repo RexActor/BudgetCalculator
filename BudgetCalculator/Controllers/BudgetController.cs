@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -314,10 +315,17 @@ public class BudgetController : Controller
 	public async Task<IActionResult> EditWeek(int id)
 	{
 		var weekBudget = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: id);
+
+
 		if (weekBudget is null)
 		{
 			return View("CustomError", $"Couldn't find Weekly budget with ID {id}");
 		}
+
+
+		IEnumerable<DailyBudget> dailyBudgetsList = await _service.GetDailyBudgetByWeeklyIdAsync(weekBudget.Id);
+
+
 
 
 		Dictionary<int, int> MonhtlyWeeks = new Dictionary<int, int>();
@@ -345,7 +353,102 @@ public class BudgetController : Controller
 
 		ViewBag.RolesList = roleNames;
 		ViewBag.WeeklyBudgets = MonhtlyWeeks;
-		return View(weekBudget);
+	
+
+
+		WeeklyBudgetVM weeklyBudgetVM = new WeeklyBudgetVM()
+		{
+
+			WeekNumber = weekBudget!.WeekNumber,
+			Budget = weekBudget!.Budget,
+			dailyBudgets = dailyBudgetsList.ToList(),
+			DirectProductiveHours = weekBudget!.DirectProductiveHours,
+			AgencyProductiveHours = weekBudget.AgencyProductiveHours,
+			Cases = weekBudget.Cases,
+			CostCenter = weekBudget!.CostCenter,
+			MonthName = weekBudget!.MonthName,
+			Id = weekBudget!.Id,
+
+
+		};
+
+
+
+
+		return View(weeklyBudgetVM);
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> CompleteDate(int budgetId, string date)
+	{
+		var weeklyBudgets = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: budgetId);
+
+
+		IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weeklyBudgets!.CostCenter!.Id);
+		List<string> roleNames = new List<string>();
+		if (!roles.Any())
+		{
+			roleNames.Add("DEFAULT ROLE");
+		}
+
+		roles.AsEnumerable().ToList().ForEach(role =>
+		{
+			roleNames.Add(role.Name ?? default!);
+		});
+
+
+
+		double TotalWeeklyProductiveHours = (weeklyBudgets.AgencyProductiveHours + weeklyBudgets.DirectProductiveHours);
+		double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)weeklyBudgets.Cases)) * 60, 3);
+		double TotalMinutes = Math.Round(weeklyBudgets.Cases * allowedMinutesPerCase, 3);
+		double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
+
+
+		DailyBudget dailyBudget = new DailyBudget();
+		dailyBudget.budgetDate = DateTime.Parse(date);
+		dailyBudget.MonthlyMinutesPerCase = allowedMinutesPerCase;
+		dailyBudget.budgetDate = DateTime.Parse(date);
+		dailyBudget.DailyAllowedHours = 0;
+		dailyBudget.WeeklyBudgets = weeklyBudgets;
+
+
+		dailyBudget.DailyRoles = new List<DailyRolesData>();
+		roleNames.ForEach(role =>
+		{
+
+			dailyBudget.DailyRoles.Add(new DailyRolesData
+			{
+				Name = role,
+				DailyHeadCountOfRole = 0,
+				DailyHoursOfRole = 0,
+
+			});
+		});
+
+
+
+
+		ViewBag.RolesList = roleNames;
+		ViewBag.Date = date;
+		return View(dailyBudget);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> CompleteDate(DailyBudget dailyBudget)
+	{
+		var weeklyBudgets = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: dailyBudget.WeeklyBudgets.Id);
+
+		dailyBudget.DailyTotalMinutes = dailyBudget.DailyCases * dailyBudget.MonthlyMinutesPerCase;
+		dailyBudget.DailyAllowedHours = dailyBudget.DailyTotalMinutes / 60;
+		dailyBudget.WeeklyBudgets = weeklyBudgets;
+		await _service.UpdateDailyBudget(dailyBudget);
+
+
+		return RedirectToRoute(new
+		{
+			action = "EditWeek",
+			id = weeklyBudgets.Id
+		});
 	}
 
 }

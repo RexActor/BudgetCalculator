@@ -1,0 +1,115 @@
+﻿@using System.Globalization;
+@model DailyBudget;
+
+
+
+@{
+
+
+}
+
+
+
+
+<form asp-action="CompleteDate" method="post">
+	
+	<input hidden type="text" asp-for="budgetDate" value="@Model.budgetDate.ToShortDateString()" />
+	<input hidden asp-for="MonthlyMinutesPerCase" value="@Model.MonthlyMinutesPerCase" />
+	<input hidden asp-for="WeeklyBudgets.Id" value="@Model.WeeklyBudgets.Id"/>
+	<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+		<div class="card">
+			<div class="row bg-light g-0 ">
+				<div class="card-header">
+					<h3 class="text-center card-title ">
+						<span class="fw-bolder"></span>
+						<span class="fs-5 fw-bolder text-secondary text-decoration-underline"></span>
+						<input type="submit" value="Update Day" />
+					</h3>
+				</div>
+
+				<div class="col-md-6">
+					<div class="card-body">
+					
+						<p class="card-text text-secondary"><b>WC date:</b><span class="text-success fw-bolder"> </span> </p>
+						<p class="card-text text-secondary"><b>Week:</b><span class="text-success fw-bolder"> </span></p>
+						<p class="card-text text-secondary"><b>Month:</b><span class="text-success fw-bolder"> </span></p>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="card-body">
+						@{
+							
+						}
+						<div class="form-floating">
+							<input asp-for="DailyCases"  class="form-control-sm mb-2 " title="Number of Cases/Day" placeholder="Number of Cases/Day" />
+						</div>
+						<p class="card-text text-secondary"><b>Av. Monthly mins/case:</b><span class="text-success fw-bolder">@Model.MonthlyMinutesPerCase </span></p>
+						<p class="card-text text-secondary"><b>Total Minutes:</b> {minutes}</p>
+						<p class="card-text text-secondary"><b>Hours Allowed:</b> {hours}</p>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
+						<table class="table table-borderless text-center">
+							<thead>
+								<tr class="table-bordered text-secondary" style="border-bottom: thin solid; border-color:gray;">
+									<th>Direct Role</th>
+									<th title="Head Count">HC</th>
+									<th>Hrs shift/person</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+
+
+
+								@for (int i = 0; i < Model?.DailyRoles?.Count; i++)
+								{
+									<tr class="text-success fw-bolder ">
+										<input hidden asp-for="DailyRoles[i].Name">
+										<td class="">@Model.DailyRoles[i].Name</td>
+										<td class="" title="Head Count"><input asp-for="DailyRoles[i].DailyHeadCountOfRole" class="form-control m-auto" type="number" placeholder="0" style="width:80px;"></td>
+										<td class=""><input asp-for="DailyRoles[i].DailyHoursOfRole" class="form-control  m-auto" type="number" placeholder="0" style="width:80px;"></td>
+
+									</tr>
+								}
+
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+				<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
+					<span>
+						Last Updated: @DateTime.Now.ToLongDateString() by {User}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+</form>
+
+
+
