@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class RoleEntityRenamed : Migration
     {
@@ -49,4 +49,3 @@ namespace BudgetCalculator.Migrations
                 });
         }
     }
-}

@@ -1,9 +1,8 @@
 ﻿using BudgetCalculator.Data.Base;
 using BudgetCalculator.Models;
 
-namespace BudgetCalculator.Data.Services
+namespace BudgetCalculator.Data.Services;
+
+public interface IDepartmentService : IEntityBaseRepository<DepartmentEntity>
 {
-	public interface IDepartmentService : IEntityBaseRepository<DepartmentEntity>
-	{
-	}
 }

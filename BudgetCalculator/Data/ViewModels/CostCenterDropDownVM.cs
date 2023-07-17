@@ -1,7 +1,7 @@
 ﻿using BudgetCalculator.Models;
 
-namespace BudgetCalculator.Data.ViewModels
-{
+namespace BudgetCalculator.Data.ViewModels;
+
     public class CostCenterDropDownVM
     {
 
@@ -13,4 +13,3 @@ namespace BudgetCalculator.Data.ViewModels
         public List<DepartmentEntity>  Departments { get; set; }
 
     }
-}

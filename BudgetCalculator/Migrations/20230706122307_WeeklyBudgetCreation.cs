@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class WeeklyBudgetCreation : Migration
     {
@@ -59,4 +59,3 @@ namespace BudgetCalculator.Migrations
                 name: "WeeklyBudgets");
         }
     }
-}

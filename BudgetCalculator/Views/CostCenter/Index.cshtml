@@ -6,7 +6,7 @@
 *@
 @{
 
-	ViewData["Title"] = "Available Cost Centers";
+ViewData["Title"] = "Available Cost Centers";
 
 }
 
@@ -18,8 +18,8 @@
 		</div>
 
 		@foreach (var costCenter in Model)
-		{
-			<div class="col-md-3 col-xs-6 mb-3 mt-3 g-3">
+	{
+		<div class="col-md-3 col-xs-6 mb-3 mt-3 g-3">
 				<div class="card shadow">
 					<div class="card-header ">
 						<span class="float-start text-muted " style="font-size:0.6rem;">ID:@costCenter.Id</span>
@@ -68,23 +68,23 @@
 					</div>
 					<div class="card-footer">
 						@{
-							var createdAt = costCenter?.CreatedAt;
-							var createdAtString = createdAt.HasValue ? createdAt.Value.ToShortDateString() : string.Empty;
+						var createdAt = costCenter?.CreatedAt;
+						var createdAtString = createdAt.HasValue ? createdAt.Value.ToShortDateString() : string.Empty;
 
-						
-						}
+					
+					}
 						<span class="text-muted">Created by: @costCenter?.CreatedBy on @createdAtString </span>
 
 						@if (costCenter?.LastUpdatedAt != null && costCenter.LastUpdatedBy != null)
-						{
-							<span class="text-muted">Updated by: @costCenter.LastUpdatedBy on @costCenter.LastUpdatedAt.Value.ToShortDateString()</span>
-						}
+					{
+						<span class="text-muted">Updated by: @costCenter.LastUpdatedBy on @costCenter.LastUpdatedAt.Value.ToShortDateString()</span>
+					}
 
 					</div>
 				</div>
 
 			</div>
-		}
+	}
 		<div class="card-footer fw-bolder" style="background-color:slategray">
 			<h1 class="text-center text-white fs-5 float-end">@DateTime.Now.ToShortDateString()</h1>
 		</div>
@@ -93,7 +93,7 @@
 
 
 @{
-	var controller = ViewContext.RouteData.Values["controller"];
+var controller = ViewContext.RouteData.Values["controller"];
 }
 @section header{
 

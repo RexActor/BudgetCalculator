@@ -1,14 +1,13 @@
 ﻿using BudgetCalculator.Data.Base;
 using BudgetCalculator.Models;
 
-namespace BudgetCalculator.Data.Services
+namespace BudgetCalculator.Data.Services;
+
+public class DepartmentService : EntityBaseRepository<DepartmentEntity>, IDepartmentService
 {
-	public class DepartmentService : EntityBaseRepository<DepartmentEntity>, IDepartmentService
+	private readonly AppDBContext _context;
+	public DepartmentService(AppDBContext context) : base(context)
 	{
-		private readonly AppDBContext _context;
-		public DepartmentService(AppDBContext context) : base(context)
-		{
-			_context= context;
-		}
+		_context= context;
 	}
 }

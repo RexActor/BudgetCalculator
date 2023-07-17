@@ -1,15 +1,14 @@
 ﻿using BudgetCalculator.Models;
 
-namespace BudgetCalculator.Data.ViewModels
+namespace BudgetCalculator.Data.ViewModels;
+
+public class BudgetDropDownVM
 {
-	public class BudgetDropDownVM
+
+	public BudgetDropDownVM()
 	{
-
-		public BudgetDropDownVM()
-		{
-			CostCenters =new List<CostCenterEntity>();  
-		}
-
-		public List<CostCenterEntity>    CostCenters { get; set; }
+		CostCenters =new List<CostCenterEntity>();  
 	}
+
+	public List<CostCenterEntity>    CostCenters { get; set; }
 }

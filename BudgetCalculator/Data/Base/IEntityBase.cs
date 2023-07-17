@@ -1,8 +1,7 @@
-﻿namespace BudgetCalculator.Data.Base
-{
-	public interface IEntityBase
-	{
+﻿namespace BudgetCalculator.Data.Base;
 
-		public int Id { get; set; }
-	}
+public interface IEntityBase
+{
+
+	public int Id { get; set; }
 }

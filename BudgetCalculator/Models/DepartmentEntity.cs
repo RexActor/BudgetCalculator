@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BudgetCalculator.Models
-{
+namespace BudgetCalculator.Models;
+
     public class DepartmentEntity : IEntityBase
     {
 
@@ -25,4 +25,3 @@ namespace BudgetCalculator.Models
         public string? LastUpdatedBy { get; set; }
 
     }
-}

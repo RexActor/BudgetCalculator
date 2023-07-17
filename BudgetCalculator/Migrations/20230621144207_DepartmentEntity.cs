@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class DepartmentEntity : Migration
     {
@@ -37,4 +37,3 @@ namespace BudgetCalculator.Migrations
                 name: "Departments");
         }
     }
-}

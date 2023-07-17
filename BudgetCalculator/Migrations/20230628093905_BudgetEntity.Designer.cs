@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     [DbContext(typeof(AppDBContext))]
     [Migration("20230628093905_BudgetEntity")]
     partial class BudgetEntity
@@ -130,4 +130,3 @@ namespace BudgetCalculator.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

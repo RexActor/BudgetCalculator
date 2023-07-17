@@ -27,8 +27,8 @@
 	<tbody>
 
 		@foreach (var budget in Model)
-		{
-			<tr>
+	{
+		<tr>
 			
 				<td>@budget.CostCenter.Name</td>
 				<td>@budget.CostCenter.Department.Name</td>
@@ -44,7 +44,7 @@
 				</td>
 			</tr>
 
-		}
+	}
 
 
 	</tbody>
@@ -58,7 +58,7 @@
 
 
 @{
-	var controller = ViewContext.RouteData.Values["controller"];
+var controller = ViewContext.RouteData.Values["controller"];
 }
 @section header{
 

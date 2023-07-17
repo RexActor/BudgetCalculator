@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class RoleEntityAddedCostCenter : Migration
     {
@@ -70,4 +70,3 @@ namespace BudgetCalculator.Migrations
                 table: "DepartmentRoles");
         }
     }
-}

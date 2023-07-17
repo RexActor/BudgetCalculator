@@ -5,23 +5,23 @@
 *@
 @{
 
-	ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
-	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
-	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
-	string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault()??"Unknown";
-	var firstDate = new DateTime(BudgetYear-1, 12, 31);
-	string nextMonthDisable = string.Empty;
-	string prevMonthDisable = string.Empty;
-	string activeMonth = string.Empty;
+ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
+int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
+int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
+string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault()??"Unknown";
+var firstDate = new DateTime(BudgetYear-1, 12, 31);
+string nextMonthDisable = string.Empty;
+string prevMonthDisable = string.Empty;
+string activeMonth = string.Empty;
 
-	if (ViewBag.NextMonthIndex == 12)
-	{
-		nextMonthDisable = "disabled";
-	}
-	if (ViewBag.CurrentMonthIndex == 0)
-	{
-		prevMonthDisable = "disabled";
-	}
+if (ViewBag.NextMonthIndex == 12)
+{
+	nextMonthDisable = "disabled";
+}
+if (ViewBag.CurrentMonthIndex == 0)
+{
+	prevMonthDisable = "disabled";
+}
 }
 
 <div class="card border shadow ">
@@ -43,22 +43,22 @@
 					</li>
 
 					@foreach (var month in FinanceCalendar.FinanceCalendarWeekModel)
+				{
+					if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
 					{
-						if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
-						{
-							activeMonth = "active";
-						}
-						else
-						{
-							activeMonth = string.Empty;
-						}
+						activeMonth = "active";
+					}
+					else
+					{
+						activeMonth = string.Empty;
+					}
 
-						<li class="page-item @activeMonth">
+					<li class="page-item @activeMonth">
 							<a class="text-center page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key)">
 								<span>@month.Key.Substring(0,3)</span>
 							</a>
 						</li>
-					}
+				}
 
 					<li class="page-item @nextMonthDisable">
 						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonthIndex">
@@ -70,9 +70,9 @@
 		</div>
 
 		@foreach (var week in Model)
-		{
+	{
 
-			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+		<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
 				<div class="card">
 					<div class="row bg-light g-0 ">
 						<div class="card-header">
@@ -94,11 +94,11 @@
 							<div class="card-body">
 								@{
 
-									double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
-									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
-									double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
-									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
-								}
+								double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
+								double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
+								double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
+								double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
+							}
 
 								<p class="text-secondary">
 									<b>Cases/Week:</b><span class="text-success fw-bolder"> @week.Cases </span>
@@ -125,16 +125,16 @@
 
 									<tbody>										
 											@foreach (var departmentRole in ViewBag.RolesList)
-											{
+										{
 
-												<tr class="text-success fw-bolder" >
+											<tr class="text-success fw-bolder" >
 													<td title="Cost Center">@week.CostCenter.Name</td>
 													<td>@departmentRole</td>
 													<td title="Head Count">{HC}</td>
 													<td>{Hours}</td>
 													<td>{total Hours}</td>
 												</tr>
-											}																					
+										}																					
 
 										<tr>
 											<td></td>
@@ -168,6 +168,6 @@
 					</div>
 				</div>
 			</div>
-		}
+	}
 	</div>
 </div>

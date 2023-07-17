@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class BudgetUpdate : Migration
     {
@@ -58,4 +58,3 @@ namespace BudgetCalculator.Migrations
                 defaultValue: "");
         }
     }
-}

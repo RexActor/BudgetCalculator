@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class updated_cost_center_with_relations : Migration
     {
@@ -59,4 +59,3 @@ namespace BudgetCalculator.Migrations
                 defaultValue: "");
         }
     }
-}

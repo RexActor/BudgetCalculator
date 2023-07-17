@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
+namespace BudgetCalculator.Migrations;
+
+/// <inheritdoc />
+public partial class CostCenters : Migration
 {
 	/// <inheritdoc />
-	public partial class CostCenters : Migration
+	protected override void Up(MigrationBuilder migrationBuilder)
 	{
-		/// <inheritdoc />
-		protected override void Up(MigrationBuilder migrationBuilder)
-		{
-			throw new NotSupportedException();
-		}
+		throw new NotSupportedException();
+	}
 
-		/// <inheritdoc />
-		protected override void Down(MigrationBuilder migrationBuilder)
-		{
-			throw new NotSupportedException();
-		}
+	/// <inheritdoc />
+	protected override void Down(MigrationBuilder migrationBuilder)
+	{
+		throw new NotSupportedException();
 	}
 }

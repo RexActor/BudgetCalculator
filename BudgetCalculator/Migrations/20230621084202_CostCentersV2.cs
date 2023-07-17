@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class CostCentersV2 : Migration
     {
@@ -32,4 +32,3 @@ namespace BudgetCalculator.Migrations
                 name: "CostCenters");
         }
     }
-}
