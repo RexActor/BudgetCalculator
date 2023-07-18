@@ -10,11 +10,6 @@
 	int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName ?? default!);
 	var prevWeekDisable = "disabled";
 	var nextWeekDisable = "disabled";
-
-
-
-
-
 }
 
 <div class="card shadow ">
@@ -51,6 +46,7 @@
 			</nav>
 		</div>
 
+
 		@for (int i = 0; i < 7; i++)
 		{
 			var dayofWeek = @weekComencingDate.AddDays(i).DayOfWeek;
@@ -60,7 +56,7 @@
 			double TotalDailyMinutes = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyTotalMinutes).FirstOrDefault() * 1000) / 1000;
 			double TotalDailyHoursAllowed = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyAllowedHours).FirstOrDefault() * 1000) / 1000;
 
-			double totalHorsForDay = 0;
+			double DirectLabourTotalHoursPerDay = 0;
 			double AgencyHoursAvailable = 0;
 
 
@@ -112,9 +108,7 @@
 											<th>Total Hours</th>
 										</tr>
 									</thead>
-
 									<tbody>
-
 
 										@for (int x = 0; x < Model.dailyBudgets.Count; x++)
 										{
@@ -130,31 +124,28 @@
 														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyHoursOfRole</td>
 														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole  </td>
 													</tr>
-													totalHorsForDay += @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole;
+
+													DirectLabourTotalHoursPerDay += @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole;
 												}
 
 											}
 										}
-
-
-
-
-
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
 											<td></td>
 
-
-
-
-											<td class="text-center" style="border-bottom: thin solid; border-color:gray;"><span class="fw-bolder">@totalHorsForDay</span></td>
+											<td class="text-center" style="border-bottom: thin solid; border-color:gray;"><span class="fw-bolder">@DirectLabourTotalHoursPerDay</span></td>
 										</tr>
 										<tr>
 											@{
 
-												AgencyHoursAvailable = TotalDailyHoursAllowed - totalHorsForDay < 0 ? 0 : TotalDailyHoursAllowed - totalHorsForDay;
+												////AGENCY Hours available calcualted based on total Hours available - Direct labour hours available
+												///Due that budget is "fixed" there are no option to flex direct labour
+												///And in this case "holes" (shortage in requirement fullfilment) is being covered with Agency
 
+
+												AgencyHoursAvailable = TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay < 0 ? 0 : TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay;
 												var AgencyHeadCount = Math.Floor(AgencyHoursAvailable / 8);
 
 											}

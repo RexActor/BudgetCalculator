@@ -18,5 +18,7 @@ public interface IBudgetService : IEntityBaseRepository<BudgetEntity>
 	Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync();
 	Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId);
 	Task<WeeklyBudget>GetWeeklyBudgetByIdAsync(int weeklyBudgetId);
+	Task<WeeklyBudget> GetWeeklyBudgetsByDateAsync(int weekNumber, DateTime budgetDate);
+
 	Task<IEnumerable<DailyBudget>> GetDailyBudgetByWeeklyIdAsync(int weeklyBudgetId);
 }

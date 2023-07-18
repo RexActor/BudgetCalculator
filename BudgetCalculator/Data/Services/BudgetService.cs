@@ -162,6 +162,11 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 		return await _context.WeeklyBudgets.Include(item => item.Budget).ThenInclude(item => item!.CostCenter).ThenInclude(item => item.Department).Where(item => item.Id == weeklyBudgetId).FirstOrDefaultAsync() ?? default!;
 	}
 
+	public async Task<WeeklyBudget> GetWeeklyBudgetsByDateAsync(int weekNumber,DateTime budgetDate)
+	{
+		return await _context.WeeklyBudgets.Include(item => item.Budget).ThenInclude(item => item!.CostCenter).ThenInclude(item => item.Department).Where(item => item.WeekNumber == weekNumber).FirstOrDefaultAsync() ?? default!;
+	}
+
 	public async Task UpdateBudget(BudgetEntityVM entity)
 	{
 

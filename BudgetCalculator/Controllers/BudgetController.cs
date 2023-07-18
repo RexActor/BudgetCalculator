@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -21,14 +22,11 @@ public class BudgetController : Controller
 		_service = service;
 	}
 
-
 	public async Task<IActionResult> Index()
 	{
 		var budgets = await _service.GetAllBudgetsAsync();
 		return View(budgets);
 	}
-
-
 
 
 	//GET: weekly?year={year}&costCenterId={costcenterID}
@@ -83,11 +81,45 @@ public class BudgetController : Controller
 		ViewBag.CurrentMonth = monthName;
 		ViewBag.CurrentMonthIndex = monthIndex;
 
+		List<dynamic> dynamicObjectList = new List<dynamic>();
+		List<DailyBudget> dailyBudgets = new List<DailyBudget>();
+		var selectedWeek = weeklyBudgets.Where(item => item.MonthName == monthName);
 
-		return View(weeklyBudgets.Where(item => item.MonthName == monthName));
+		foreach (var item in selectedWeek)
+		{
+
+			var dbuget = await _service.GetDailyBudgetByWeeklyIdAsync(weeklyBudgetId: item.Id);
+
+			dbuget.Where(item=>item.WeeklyBudgets.CostCenter.Id==CostCenterId).ToList().ForEach(subitem =>
+			{
+				
+				if (!dailyBudgets.Contains(subitem))
+				{
+					dailyBudgets.Add(subitem);
+				}
+			});			
+		}
+
+		dailyBudgets.ToList().ForEach(item =>
+		{
+			dynamic dynamicObject = new ExpandoObject();
+			dynamicObject.WeekNumber = item.WeeklyBudgets.WeekNumber;
+			dynamicObject.budgetDate = item.budgetDate;
+			dynamicObject.Id = item.Id;
+			dynamicObject.DailyCases = item.DailyCases;
+			dynamicObject.DailyRolesTotalHours = item.DailyRoles.ToList().Where(item=>item.Id==item.Id).Sum(item=>(double)item.DailyTotalHoursOfRole);
+			dynamicObject.DailyRoles = item.DailyRoles.ToList();
+			
+			dynamicObject.DailyAllowedHours = item.DailyAllowedHours;
+			dynamicObject.DailyTotalMinutes = item.DailyTotalMinutes;
+			dynamicObject.MonthlyMinutesPerCase = item.MonthlyMinutesPerCase;
+
+			dynamicObjectList.Add(dynamicObject);
+		});
+
+		ViewBag.DynamicObjects = dynamicObjectList;
+		return View(selectedWeek);
 	}
-
-
 
 	[HttpGet]
 
@@ -140,19 +172,13 @@ public class BudgetController : Controller
 	[HttpPost]
 	public async Task<IActionResult> Create(BudgetEntityVM budget)
 	{
-
-
 		var budgetDb = await _service.GetByYearAndCostCenterAsync(year: budget.Year, costCenterId: budget.CostCenterId);
 
 		if (budgetDb is null)
 		{
 			return View("CustomError", $"Budget Exists for {budget.Year} this Cost Center with ID: {budgetDb?.CostCenterId}");
 		}
-
-
 		await _service.CreateBudget(budget);
-
-
 
 		return RedirectToAction(nameof(Index));
 	}
@@ -353,7 +379,7 @@ public class BudgetController : Controller
 
 		ViewBag.RolesList = roleNames;
 		ViewBag.WeeklyBudgets = MonhtlyWeeks;
-	
+
 
 
 		WeeklyBudgetVM weeklyBudgetVM = new WeeklyBudgetVM()
@@ -361,7 +387,7 @@ public class BudgetController : Controller
 
 			WeekNumber = weekBudget!.WeekNumber,
 			Budget = weekBudget!.Budget,
-			dailyBudgets = dailyBudgetsList.ToList(),
+			dailyBudgets = dailyBudgetsList.Where(item=>item.WeeklyBudgets.CostCenter.Id==weekBudget.CostCenter.Id).ToList(),
 			DirectProductiveHours = weekBudget!.DirectProductiveHours,
 			AgencyProductiveHours = weekBudget.AgencyProductiveHours,
 			Cases = weekBudget.Cases,

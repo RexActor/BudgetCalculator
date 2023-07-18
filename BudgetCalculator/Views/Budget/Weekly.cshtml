@@ -5,24 +5,32 @@
 *@
 @{
 
-ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
-int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
-int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
-string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault()??"Unknown";
-var firstDate = new DateTime(BudgetYear-1, 12, 31);
-string nextMonthDisable = string.Empty;
-string prevMonthDisable = string.Empty;
-string activeMonth = string.Empty;
+	ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
+	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
+	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
+	string departementName = Model.AsEnumerable().Select(item => item.CostCenter.Department.Name).FirstOrDefault() ?? "Unknown";
+	var firstDate = new DateTime(BudgetYear - 1, 12, 31);
+	string nextMonthDisable = string.Empty;
+	string prevMonthDisable = string.Empty;
+	string activeMonth = string.Empty;
 
-if (ViewBag.NextMonthIndex == 12)
+	if (ViewBag.NextMonthIndex == 12)
+	{
+		nextMonthDisable = "disabled";
+	}
+	if (ViewBag.CurrentMonthIndex == 0)
+	{
+		prevMonthDisable = "disabled";
+	}
+
+	List<dynamic> dynamicObjectList = ViewBag.DynamicObjects;
+}
+
+@foreach (var item in dynamicObjectList)
 {
-	nextMonthDisable = "disabled";
+
 }
-if (ViewBag.CurrentMonthIndex == 0)
-{
-	prevMonthDisable = "disabled";
-}
-}
+
 
 <div class="card border shadow ">
 	<div class="row d-flex justify-content-center g-0">
@@ -43,22 +51,22 @@ if (ViewBag.CurrentMonthIndex == 0)
 					</li>
 
 					@foreach (var month in FinanceCalendar.FinanceCalendarWeekModel)
-				{
-					if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
 					{
-						activeMonth = "active";
-					}
-					else
-					{
-						activeMonth = string.Empty;
-					}
+						if (@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key) == ViewBag.CurrentMonthIndex)
+						{
+							activeMonth = "active";
+						}
+						else
+						{
+							activeMonth = string.Empty;
+						}
 
-					<li class="page-item @activeMonth">
+						<li class="page-item @activeMonth">
 							<a class="text-center page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(month.Key)">
 								<span>@month.Key.Substring(0,3)</span>
 							</a>
 						</li>
-				}
+					}
 
 					<li class="page-item @nextMonthDisable">
 						<a class="page-link" asp-action="Weekly" asp-route-CostCenterId="@costCenterId" asp-route-year="@BudgetYear" asp-route-monthIndex="@ViewBag.NextMonthIndex">
@@ -70,9 +78,18 @@ if (ViewBag.CurrentMonthIndex == 0)
 		</div>
 
 		@foreach (var week in Model)
-	{
+		{
 
-		<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+			var totalCasesRecorded = 0;
+
+			totalCasesRecorded = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => item.DailyCases);
+			var totalMinutesRecorded = Math.Round(dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyTotalMinutes), 3);
+			var totalHoursAllowedRecorded = Math.Round(dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyAllowedHours), 3);
+			var totalDirectHours = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyRolesTotalHours);
+			var AgencyHoursAllowed = Math.Floor(totalHoursAllowedRecorded - totalDirectHours);
+			var AgencyHeadCountAllowed = Math.Floor(AgencyHoursAllowed / 8);
+
+			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
 				<div class="card">
 					<div class="row bg-light g-0 ">
 						<div class="card-header">
@@ -94,18 +111,18 @@ if (ViewBag.CurrentMonthIndex == 0)
 							<div class="card-body">
 								@{
 
-								double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
-								double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
-								double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
-								double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
-							}
+									double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
+									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
+									double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
+									double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
+								}
 
 								<p class="text-secondary">
-									<b>Cases/Week:</b><span class="text-success fw-bolder"> @week.Cases </span>
+									<b>Cases/Week:</b><span class="text-success fw-bolder"> @week.Cases <span class="text-danger"> [@totalCasesRecorded]</span></span>
 								</p>
 								<p class="text-secondary"><b>Av. mins/case:</b> <span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
-								<p class="text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes</span></p>
-								<p class="text-secondary"><b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###")</span></p>
+								<p class="text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes <span class="text-danger">[@totalMinutesRecorded]</span></span></p>
+								<p class="text-secondary"><b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###") <span class="text-danger"> [@totalHoursAllowedRecorded]</span></span></p>
 							</div>
 						</div>
 
@@ -123,36 +140,54 @@ if (ViewBag.CurrentMonthIndex == 0)
 										</tr>
 									</thead>
 
-									<tbody>										
-											@foreach (var departmentRole in ViewBag.RolesList)
+									<tbody>
+										@foreach (var departmentRole in ViewBag.RolesList)
 										{
+											var departmentRoleTotalHours = 0;
+											var departmentRoleTotalHeadCount = 0;
+											double departmentRoleHours = 0d;
 
-											<tr class="text-success fw-bolder" >
-													<td title="Cost Center">@week.CostCenter.Name</td>
-													<td>@departmentRole</td>
-													<td title="Head Count">{HC}</td>
-													<td>{Hours}</td>
-													<td>{total Hours}</td>
-												</tr>
-										}																					
+											//var roleTotalHours = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Where(item => item.DailyRoles.Name == departmentRole).Sum(item => (double)item.DailyRolses.DailyTotalHoursOfRole);
+											foreach (var dynamicRole in dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber))
+											{
+												@for (int x = 0; x < dynamicRole.DailyRoles.Count; x++)
+												{
+													if (departmentRole == @dynamicRole.DailyRoles[x].Name)
+													{
+														departmentRoleTotalHeadCount += @dynamicRole.DailyRoles[x].DailyHeadCountOfRole;
+														departmentRoleTotalHours += @dynamicRole.DailyRoles[x].DailyTotalHoursOfRole;
+														departmentRoleHours = Math.Round((double)departmentRoleTotalHours / departmentRoleTotalHeadCount, 2);
+
+													}
+												}
+
+											}
+											<tr class="text-success fw-bolder">
+												<td title="Cost Center">@week.CostCenter.Name</td>
+												<td>@departmentRole</td>
+												<td title="Head Count">{HC} <span class="text-danger"> [@departmentRoleTotalHeadCount]</span></td>
+												<td>{Hours} <span class="text-danger">[@departmentRoleHours]</span></td>
+												<td>{total Hours} <span class="text-danger"> [@departmentRoleTotalHours]</span></td>
+											</tr>
+										}
 
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
 											<td></td>
-											<td class="text-center fw-bolder" style="border-bottom: thin solid; border-color:gray;">{total Hours}</td>
+											<td class="text-center fw-bolder" style="border-bottom: thin solid; border-color:gray;">{total Hours} <span class="text-danger">[@totalDirectHours]</span></td>
 										</tr>
 
 										<tr>
 											<td class="text-end text-secondary" colspan="3"><b>Agency Hours:</b></td>
-											<td class="text-center fw-bolder">{total Hours}</td>
+											<td class="text-center fw-bolder">{total Hours} <span class="text-danger">[@AgencyHoursAllowed]</span></td>
 											<td></td>
 										</tr>
 
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Agency Available:</b></td>
-											<td class="text-center fw-bolder" style="border-bottom: thin solid; border-color:gray;" colspan="1">{Head Count}</td>
+											<td class="text-center fw-bolder" style="border-bottom: thin solid; border-color:gray;" colspan="1">{Head Count} <span class="text-danger">[@AgencyHeadCountAllowed]</span></td>
 											<td></td>
 										</tr>
 									</tbody>
@@ -168,6 +203,6 @@ if (ViewBag.CurrentMonthIndex == 0)
 					</div>
 				</div>
 			</div>
-	}
+		}
 	</div>
 </div>
