@@ -26,11 +26,6 @@
 	List<dynamic> dynamicObjectList = ViewBag.DynamicObjects;
 }
 
-@foreach (var item in dynamicObjectList)
-{
-
-}
-
 
 <div class="card border shadow ">
 	<div class="row d-flex justify-content-center g-0">
@@ -80,16 +75,14 @@
 		@foreach (var week in Model)
 		{
 
-			var totalCasesRecorded = 0;
-
-			totalCasesRecorded = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => item.DailyCases);
+			var totalCasesRecorded = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => item.DailyCases);
 			var totalMinutesRecorded = Math.Round(dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyTotalMinutes), 3);
 			var totalHoursAllowedRecorded = Math.Round(dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyAllowedHours), 3);
 			var totalDirectHours = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Sum(item => (double)item.DailyRolesTotalHours);
 			var AgencyHoursAllowed = Math.Floor(totalHoursAllowedRecorded - totalDirectHours);
 			var AgencyHeadCountAllowed = Math.Floor(AgencyHoursAllowed / 8);
 
-			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+			<div class="col-md-6 col-xs-6 border-primary mb-3 gx-5" style="font-size:14px;">
 				<div class="card">
 					<div class="row bg-light g-0 ">
 						<div class="card-header">
@@ -157,7 +150,6 @@
 														departmentRoleTotalHeadCount += @dynamicRole.DailyRoles[x].DailyHeadCountOfRole;
 														departmentRoleTotalHours += @dynamicRole.DailyRoles[x].DailyTotalHoursOfRole;
 														departmentRoleHours = Math.Round((double)departmentRoleTotalHours / departmentRoleTotalHeadCount, 2);
-
 													}
 												}
 

@@ -12,8 +12,9 @@ builder.Services.AddScoped<ICostCenterService, CostCenterService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IDepartmentRoleService, DepartmentRoleService>();
+builder.Services.AddScoped<IStaffOrderingService, StaffOrderingService>();
 builder.Services.AddSingleton<TelegramService>();
-builder.Services.AddHostedService<TelegramService>(p=>p.GetRequiredService<TelegramService>());
+builder.Services.AddHostedService<TelegramService>(p => p.GetRequiredService<TelegramService>());
 //builder.Services.AddHostedService<TelegramService>();
 
 
