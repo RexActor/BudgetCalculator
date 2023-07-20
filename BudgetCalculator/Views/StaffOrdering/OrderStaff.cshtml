@@ -120,7 +120,7 @@
 										<tr>
 
 											<td colspan="2" class="text-end fw-bolder text-secondary">Total IPL Hours:</td>
-											<td colspan="2" class="text-end fw-bolder text-secondary"><span class="total-direct-hours-allocated"></span></td>
+											<td colspan="2" class="text-end fw-bolder text-secondary"><span class="total-direct-hours-allocated"></span> <span class="total-direct-hours-balance"></span></td>
 										</tr>
 										<tr>
 
@@ -172,8 +172,30 @@
 				sum += isNaN(value) ? 0 : value;
 			}
 
+
 			const sumSpan = divElement.querySelector('.total-direct-hours-allocated');
+
 			sumSpan.innerText = `${sum}`;
+
+
+			const hoursAvailable = divElement.getElementsByClassName('totalHoursAvailable');
+
+
+			let hourBalance = 0;
+
+			for (const _hourAvailable of hoursAvailable) {
+				const resultHour = parseFloat(_hourAvailable.innerText);
+				hourBalance = isNaN(resultHour) ? 0 : resultHour;
+			}
+
+			const TotalHoursBalance = divElement.querySelector('.total-direct-hours-balance');
+
+
+
+
+			TotalHoursBalance.innerText = sum > hourBalance ? '(' + (hourBalance - sum).toFixed(2) + ')' : '';
+
+
 
 
 			updateAgency(sum, divElement)
