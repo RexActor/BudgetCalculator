@@ -12,25 +12,25 @@ public static class FinanceCalendar
 	/// </summary>
 
 	public static Dictionary<string, int> FinanceCalendarWeekModel = new Dictionary<string, int>()
-	{
-		{ "January",4},
-		{ "February",4},
-		{"March",5 },
-		{"April",4 },
-		{ "May",4},
-		{ "June",5},
-		{"July",4 },
-		{"August",4 },
-		{"September",5 },
-		{"October",4 },
-		{"November",4 },
-		{"December",5 }
+{
+	{ "January",4},
+	{ "February",4},
+	{"March",5 },
+	{"April",4 },
+	{ "May",4},
+	{ "June",5},
+	{"July",4 },
+	{"August",4 },
+	{"September",5 },
+	{"October",4 },
+	{"November",4 },
+	{"December",5 }
 
-	};
+};
 
 	public static string GetMonthByIndex(int index)
 	{
-		if (index < FinanceCalendarWeekModel.Count-1)
+		if (index < FinanceCalendarWeekModel.Count - 1)
 		{
 			return FinanceCalendar.FinanceCalendarWeekModel.ElementAt(index).Key;
 		}

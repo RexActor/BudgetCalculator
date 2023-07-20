@@ -32,10 +32,10 @@ public class DepartmentRoleController : Controller
 
 
 		var costCenterDropDown = await _service.GetCostCenterDropDownValuesAsync();
-		
 
 
-		
+
+
 		var costCenterList = new List<SelectListItem>();
 		var departments = new List<SelectListGroup>();
 
@@ -86,7 +86,7 @@ public class DepartmentRoleController : Controller
 	{
 
 		var departmentRole = await _service.GetByIdAsync(id);
-	if (departmentRole is null) { return View("CustomError", $"Couldn't find role with ID {id}"); }
+		if (departmentRole is null) { return View("CustomError", $"Couldn't find role with ID {id}"); }
 
 		var costCenterDropDown = await _service.GetCostCenterDropDownValuesAsync();
 
@@ -180,7 +180,7 @@ public class DepartmentRoleController : Controller
 	}
 
 
-	[HttpPost,ActionName("Delete")]
+	[HttpPost, ActionName("Delete")]
 	public async Task<IActionResult> DeleteConfirm(DepartmentRoleEntity departmentRole)
 	{
 

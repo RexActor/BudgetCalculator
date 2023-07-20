@@ -10,9 +10,9 @@ public class DepartmentRoleService : EntityBaseRepository<DepartmentRoleEntity>,
 	private readonly AppDBContext _context;
 	public DepartmentRoleService(AppDBContext context) : base(context)
 	{
-		
-			_context = context;
-		
+
+		_context = context;
+
 	}
 
 	public async Task<IEnumerable<DepartmentRoleEntity>> GetAllRoles()

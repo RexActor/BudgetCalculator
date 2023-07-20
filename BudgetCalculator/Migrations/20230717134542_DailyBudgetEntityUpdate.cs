@@ -2,8 +2,8 @@
 
 #nullable disable
 
-namespace BudgetCalculator.Migrations
-{
+namespace BudgetCalculator.Migrations;
+
     /// <inheritdoc />
     public partial class DailyBudgetEntityUpdate : Migration
     {
@@ -47,4 +47,3 @@ namespace BudgetCalculator.Migrations
                 table: "DailyBudgets");
         }
     }
-}

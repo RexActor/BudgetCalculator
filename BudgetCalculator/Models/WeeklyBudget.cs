@@ -2,13 +2,13 @@
 
 namespace BudgetCalculator.Models;
 
-public class WeeklyBudget:IEntityBase
+public class WeeklyBudget : IEntityBase
 {
 
 	public int Id { get; set; }
 
 	public int WeekNumber { get; set; }
-	public BudgetEntity? Budget { get; set;}
+	public BudgetEntity? Budget { get; set; }
 
 	public string? MonthName { get; set; }
 

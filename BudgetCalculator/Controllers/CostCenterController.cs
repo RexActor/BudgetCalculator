@@ -18,10 +18,10 @@ public class CostCenterController : Controller
 
 	public CostCenterController(ICostCenterService service, TelegramService telegramService)
 	{
-	
+
 		_service = service;
 		_telegramService = telegramService;
-		
+
 	}
 
 
@@ -71,8 +71,9 @@ public class CostCenterController : Controller
 	public async Task<IActionResult> Update(int id)
 	{
 		var costService = await _service.GetCostCenterByIdAsync(id);
-		if (costService is null) {
-			return View("CustomError",$"Couldn't find Cost Center with ID: {id}");
+		if (costService is null)
+		{
+			return View("CustomError", $"Couldn't find Cost Center with ID: {id}");
 		}
 
 		//TODO:USERNAME IS HARDCODED in View Use Dynamic
@@ -105,8 +106,9 @@ public class CostCenterController : Controller
 			return View(entity);
 		}
 
-		if (id != entity.Id) {
-			return View("CustomError",$"Can't update {entity.Name} as ID's don't match!");
+		if (id != entity.Id)
+		{
+			return View("CustomError", $"Can't update {entity.Name} as ID's don't match!");
 		}
 		await _service.UpdateCostCenterAsync(entity);
 		return RedirectToAction(nameof(Index));
@@ -138,8 +140,9 @@ public class CostCenterController : Controller
 	public async Task<IActionResult> Confirm(int id)
 	{
 		var costCenter = await _service.GetCostCenterByIdAsync(id);
-		if (costCenter is null) {
-			return View("CustomError",$"Couldn't find Cost Center with ID: {id}"); 
+		if (costCenter is null)
+		{
+			return View("CustomError", $"Couldn't find Cost Center with ID: {id}");
 		}
 		await _service.DeleteAsync(id);
 		return RedirectToAction(nameof(Index));

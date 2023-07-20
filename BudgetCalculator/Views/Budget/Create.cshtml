@@ -73,14 +73,14 @@ ViewData["Title"] = "Create Budget";
 
 
 							@for (int i = 1; i <= 12; i++)
-						{
+					{
 
-							var monthName = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM", CultureInfo.InvariantCulture);
-
-
+						var monthName = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM", CultureInfo.InvariantCulture);
 
 
-							<tr>
+
+
+						<tr>
 
 
 									<td>
@@ -91,7 +91,7 @@ ViewData["Title"] = "Create Budget";
 									<td><input asp-for="MonthBudgets[i-1].DirectProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 									<td><input asp-for="MonthBudgets[i-1].AgencyProductiveHours" class="form-control" type="number" placeholder="0" /></td>
 								</tr>
-						}
+					}
 
 
 

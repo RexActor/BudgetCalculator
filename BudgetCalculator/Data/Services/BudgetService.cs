@@ -46,7 +46,6 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 			});
 		});
 
-
 		await _context.Budgets.AddRangeAsync(budgets);
 		await _context.SaveChangesAsync();
 
@@ -67,7 +66,6 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 					CostCenter = budget.CostCenter,
 					WeekNumber = weekNumber,
 					Budget = budget
-
 				});
 				weekNumber++;
 			}
@@ -76,28 +74,21 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 		await _context.WeeklyBudgets.AddRangeAsync(weeklyBudgets);
 		await _context.SaveChangesAsync();
 
-
 	}
 
 	public async Task DeleteBudgetAsync(int year, int costCenterId)
 	{
 
 		List<BudgetEntity> budgetEntities = await _context.Budgets.Include(item => item.CostCenter).Where(item => item.CostCenter.Id == costCenterId).Where(item => item.Year == year).ToListAsync();
-
 		_context.Budgets.RemoveRange(budgetEntities);
 		await _context.SaveChangesAsync();
-
 	}
 
 	public async Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync()
 	{
-
-
-		var result = await _context.Budgets.Include(item => item.CostCenter).ThenInclude(item => item.Department).GroupBy(c => c.CostCenter).Select(item => item.First()).ToListAsync();
-		return result;
+		return await _context.Budgets.Include(item => item.CostCenter).ThenInclude(item => item.Department).GroupBy(c => c.CostCenter).Select(item => item.First()).ToListAsync();
 	}
 
-	
 
 	public async Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync()
 	{
@@ -137,14 +128,13 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 		budgetView.Year = budgetDB.FirstOrDefault()?.Year ?? 0;
 		budgetView.MonthBudgets = monthBudget;
 		budgetView.Id = budgetDB.FirstOrDefault()?.Id ?? 0;
-
 		return budgetView;
 
 	}
 
 	public async Task<IEnumerable<DailyBudget>> GetDailyBudgetByWeeklyIdAsync(int weeklyBudgetId)
 	{
-		return await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item.CostCenter).ThenInclude(item => item.Department).Include(item => item.DailyRoles).ToListAsync();
+		return await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item!.CostCenter).ThenInclude(item => item!.Department).Include(item => item.DailyRoles).ToListAsync();
 	}
 
 	public async Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId)
@@ -172,7 +162,6 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 	public async Task UpdateBudget(BudgetEntityVM entity)
 	{
 
-
 		var costCenter = await _context.CostCenters.FirstOrDefaultAsync(item => item.Id == entity.CostCenterId);
 		if (costCenter is null)
 		{
@@ -181,9 +170,7 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 
 		entity.MonthBudgets.ForEach(async item =>
 		{
-
 			var objectInDB = await _context.Budgets.FindAsync(item.Id);
-
 			if (objectInDB is not null)
 			{
 				objectInDB.AgencyProductiveHours = item.AgencyProductiveHours;
@@ -192,10 +179,7 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 				objectInDB.Year = entity.Year;
 				objectInDB.Cases = item.Cases;
 				objectInDB.MonthName = item.MonthName ?? default!;
-
 				_context.Budgets.Update(objectInDB);
-
-
 				var weeklyBudgetInDB = await _context.WeeklyBudgets.Where(item => item!.Budget!.Id == objectInDB.Id).ToListAsync();
 
 				foreach (var weeklyBudget in weeklyBudgetInDB)
@@ -204,29 +188,18 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 					weeklyBudget.MonthName = item.MonthName;
 					weeklyBudget.DirectProductiveHours = item.DirectProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[item.MonthName ?? default!];
 					weeklyBudget.AgencyProductiveHours = item.AgencyProductiveHours / FinanceCalendar.FinanceCalendarWeekModel[item.MonthName ?? default!];
-
 					weeklyBudget.Budget = objectInDB;
 				}
 
 			}
-
-
-
-
 		});
 
-
 		await _context.SaveChangesAsync();
-
-
 	}
 
 	public async Task UpdateDailyBudget(DailyBudget entity)
 	{
 		await _context.DailyBudgets.AddAsync(entity);
-
 		await _context.SaveChangesAsync();
 	}
 }
-
-

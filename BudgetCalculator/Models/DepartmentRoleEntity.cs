@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BudgetCalculator.Models;
 
-public class DepartmentRoleEntity:IEntityBase
+public class DepartmentRoleEntity : IEntityBase
 
 {
 

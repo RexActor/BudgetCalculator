@@ -10,7 +10,7 @@ namespace BudgetCalculator.Data.Services;
 
 public class TelegramService : IHostedService, IDisposable
 {
-	
+
 	private readonly ILogger<TelegramService> _logger;
 	private Timer? _timer = null;
 	private readonly IConfiguration _configuration;

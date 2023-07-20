@@ -28,7 +28,6 @@ public class BudgetController : Controller
 		return View(budgets);
 	}
 
-
 	//GET: weekly?year={year}&costCenterId={costcenterID}
 	[HttpGet]
 	public async Task<IActionResult> Weekly(int year, int CostCenterId, int monthIndex)
@@ -43,7 +42,6 @@ public class BudgetController : Controller
 		}
 
 		string monthName = FinanceCalendar.FinanceCalendarWeekModel.ElementAt(monthIndex).Key;
-
 		var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: year, costCenterId: CostCenterId);
 
 		if (monthIndex == 0)
@@ -90,30 +88,27 @@ public class BudgetController : Controller
 
 			var dbuget = await _service.GetDailyBudgetByWeeklyIdAsync(weeklyBudgetId: item.Id);
 
-			dbuget.Where(item=>item.WeeklyBudgets.CostCenter.Id==CostCenterId).ToList().ForEach(subitem =>
+			dbuget.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == CostCenterId).ToList().ForEach(subitem =>
 			{
-				
 				if (!dailyBudgets.Contains(subitem))
 				{
 					dailyBudgets.Add(subitem);
 				}
-			});			
+			});
 		}
 
 		dailyBudgets.ToList().ForEach(item =>
 		{
 			dynamic dynamicObject = new ExpandoObject();
-			dynamicObject.WeekNumber = item.WeeklyBudgets.WeekNumber;
+			dynamicObject.WeekNumber = item!.WeeklyBudgets!.WeekNumber;
 			dynamicObject.budgetDate = item.budgetDate;
 			dynamicObject.Id = item.Id;
 			dynamicObject.DailyCases = item.DailyCases;
-			dynamicObject.DailyRolesTotalHours = item.DailyRoles.ToList().Where(item=>item.Id==item.Id).Sum(item=>(double)item.DailyTotalHoursOfRole);
-			dynamicObject.DailyRoles = item.DailyRoles.ToList();
-			
+			dynamicObject.DailyRolesTotalHours = item!.DailyRoles!.AsEnumerable().Where(item => item.Id == item!.Id).Sum(item => (double)item.DailyTotalHoursOfRole);
+			dynamicObject.DailyRoles = item!.DailyRoles!.ToList();
 			dynamicObject.DailyAllowedHours = item.DailyAllowedHours;
 			dynamicObject.DailyTotalMinutes = item.DailyTotalMinutes;
 			dynamicObject.MonthlyMinutesPerCase = item.MonthlyMinutesPerCase;
-
 			dynamicObjectList.Add(dynamicObject);
 		});
 
@@ -122,20 +117,19 @@ public class BudgetController : Controller
 	}
 
 	[HttpGet]
-
 	public async Task<IActionResult> Create()
 	{
 		var budgetList = new BudgetEntityVM();
 		var budgetDropDowns = await _service.GetBudgetDropDownValuesAsync();
 		var costCenterList = new List<SelectListItem>();
 		var departments = new List<SelectListGroup>();
-
+		if (budgetDropDowns is null) { return View("CustomError", "Couldn't locate Costcenters for Budget Dropdown list"); }
 		foreach (var dropDown in budgetDropDowns.CostCenters)
 		{
-			if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+			if (!departments.Any(item => item.Name == dropDown!.Department!.Name!.ToString()))
 			{
 				departments.Add(
-					new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+					new SelectListGroup { Name = dropDown!.Department!.Name!.ToString() }
 					);
 			}
 		}
@@ -202,10 +196,10 @@ public class BudgetController : Controller
 		{
 			foreach (var dropDown in budgetDropDowns.CostCenters)
 			{
-				if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+				if (!departments.Any(item => item.Name == dropDown!.Department!.Name!.ToString()))
 				{
 					departments.Add(
-						new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+						new SelectListGroup { Name = dropDown!.Department!.Name!.ToString() }
 						);
 				}
 			}
@@ -213,7 +207,7 @@ public class BudgetController : Controller
 
 		foreach (var department in departments)
 		{
-			budgetDropDowns.CostCenters?.AsEnumerable().Where(item => item.Department.Name == department.Name).ToList().ForEach(item =>
+			budgetDropDowns.CostCenters?.AsEnumerable().Where(item => item!.Department!.Name == department.Name).ToList().ForEach(item =>
 			{
 				costCenterList.Add(new SelectListItem
 				{
@@ -247,10 +241,10 @@ public class BudgetController : Controller
 		{
 			foreach (var dropDown in budgetDropDowns.CostCenters)
 			{
-				if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+				if (!departments.Any(item => item.Name == dropDown!.Department!.Name!.ToString()))
 				{
 					departments.Add(
-						new SelectListGroup { Name = dropDown.Department.Name.ToString() }
+						new SelectListGroup { Name = dropDown!.Department!.Name!.ToString() }
 						);
 				}
 			}
@@ -306,10 +300,10 @@ public class BudgetController : Controller
 		{
 			foreach (var dropDown in budgetDropDowns.CostCenters)
 			{
-				if (!departments.Any(item => item.Name == dropDown.Department.Name.ToString()))
+				if (!departments.Any(item => item.Name == dropDown!.Department!.Name!.ToString()))
 				{
 					departments.Add(
-						new SelectListGroup { Name = dropDown!.Department!.Name.ToString() }
+						new SelectListGroup { Name = dropDown!.Department!.Name!.ToString() }
 						);
 				}
 			}
@@ -342,18 +336,12 @@ public class BudgetController : Controller
 	{
 		var weekBudget = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: id);
 
-
 		if (weekBudget is null)
 		{
 			return View("CustomError", $"Couldn't find Weekly budget with ID {id}");
 		}
 
-
 		IEnumerable<DailyBudget> dailyBudgetsList = await _service.GetDailyBudgetByWeeklyIdAsync(weekBudget.Id);
-
-
-
-
 		Dictionary<int, int> MonhtlyWeeks = new Dictionary<int, int>();
 
 		var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: weekBudget!.Budget!.Year, costCenterId: weekBudget!.CostCenter!.Id);
@@ -362,7 +350,6 @@ public class BudgetController : Controller
 		{
 			MonhtlyWeeks.Add(item.WeekNumber, item.Id);
 		});
-
 
 		IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weekBudget!.CostCenter!.Id);
 		List<string> roleNames = new List<string>();
@@ -380,26 +367,19 @@ public class BudgetController : Controller
 		ViewBag.RolesList = roleNames;
 		ViewBag.WeeklyBudgets = MonhtlyWeeks;
 
-
-
 		WeeklyBudgetVM weeklyBudgetVM = new WeeklyBudgetVM()
 		{
 
 			WeekNumber = weekBudget!.WeekNumber,
 			Budget = weekBudget!.Budget,
-			dailyBudgets = dailyBudgetsList.Where(item=>item.WeeklyBudgets.CostCenter.Id==weekBudget.CostCenter.Id).ToList(),
+			dailyBudgets = dailyBudgetsList.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == weekBudget.CostCenter.Id).ToList(),
 			DirectProductiveHours = weekBudget!.DirectProductiveHours,
 			AgencyProductiveHours = weekBudget.AgencyProductiveHours,
 			Cases = weekBudget.Cases,
 			CostCenter = weekBudget!.CostCenter,
 			MonthName = weekBudget!.MonthName,
 			Id = weekBudget!.Id,
-
-
 		};
-
-
-
 
 		return View(weeklyBudgetVM);
 	}
@@ -408,7 +388,6 @@ public class BudgetController : Controller
 	public async Task<IActionResult> CompleteDate(int budgetId, string date)
 	{
 		var weeklyBudgets = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: budgetId);
-
 
 		IEnumerable<DepartmentRoleEntity> roles = await _service.GetDepartmentRolesAsync(costCenterId: weeklyBudgets!.CostCenter!.Id);
 		List<string> roleNames = new List<string>();
@@ -422,13 +401,8 @@ public class BudgetController : Controller
 			roleNames.Add(role.Name ?? default!);
 		});
 
-
-
 		double TotalWeeklyProductiveHours = (weeklyBudgets.AgencyProductiveHours + weeklyBudgets.DirectProductiveHours);
 		double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)weeklyBudgets.Cases)) * 60, 3);
-		double TotalMinutes = Math.Round(weeklyBudgets.Cases * allowedMinutesPerCase, 3);
-		double TotalHoursAllowed = Math.Round(TotalMinutes / 60, 3);
-
 
 		DailyBudget dailyBudget = new DailyBudget();
 		dailyBudget.budgetDate = DateTime.Parse(date);
@@ -437,22 +411,16 @@ public class BudgetController : Controller
 		dailyBudget.DailyAllowedHours = 0;
 		dailyBudget.WeeklyBudgets = weeklyBudgets;
 
-
 		dailyBudget.DailyRoles = new List<DailyRolesData>();
 		roleNames.ForEach(role =>
 		{
-
 			dailyBudget.DailyRoles.Add(new DailyRolesData
 			{
 				Name = role,
 				DailyHeadCountOfRole = 0,
 				DailyHoursOfRole = 0,
-
 			});
 		});
-
-
-
 
 		ViewBag.RolesList = roleNames;
 		ViewBag.Date = date;
@@ -462,13 +430,12 @@ public class BudgetController : Controller
 	[HttpPost]
 	public async Task<IActionResult> CompleteDate(DailyBudget dailyBudget)
 	{
-		var weeklyBudgets = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: dailyBudget.WeeklyBudgets.Id);
+		var weeklyBudgets = await _service.GetWeeklyBudgetByIdAsync(weeklyBudgetId: dailyBudget!.WeeklyBudgets!.Id);
 
 		dailyBudget.DailyTotalMinutes = dailyBudget.DailyCases * dailyBudget.MonthlyMinutesPerCase;
 		dailyBudget.DailyAllowedHours = dailyBudget.DailyTotalMinutes / 60;
 		dailyBudget.WeeklyBudgets = weeklyBudgets;
 		await _service.UpdateDailyBudget(dailyBudget);
-
 
 		return RedirectToRoute(new
 		{

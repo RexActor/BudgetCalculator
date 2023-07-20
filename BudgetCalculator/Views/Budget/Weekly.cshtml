@@ -1,10 +1,6 @@
 ﻿@model IEnumerable<BudgetCalculator.Models.WeeklyBudget>;
 @using BudgetCalculator.Finance.Calendar;
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
-
 	ViewData["Title"] = $"{ViewBag.CurrentMonth} Weekly";
 	int BudgetYear = Model.AsEnumerable().Select(item => item.Budget.Year).FirstOrDefault();
 	int costCenterId = Model.AsEnumerable().Select(item => item.CostCenter.Id).FirstOrDefault();
@@ -22,8 +18,8 @@
 	{
 		prevMonthDisable = "disabled";
 	}
-
 	List<dynamic> dynamicObjectList = ViewBag.DynamicObjects;
+
 }
 
 
@@ -103,7 +99,6 @@
 						<div class="col-md-6">
 							<div class="card-body">
 								@{
-
 									double TotalWeeklyProductiveHours = (week.AgencyProductiveHours + week.DirectProductiveHours);
 									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)week.Cases)) * 60, 3);
 									double TotalMinutes = Math.Round(week.Cases * allowedMinutesPerCase, 3);
@@ -113,9 +108,15 @@
 								<p class="text-secondary">
 									<b>Cases/Week:</b><span class="text-success fw-bolder"> @week.Cases <span class="text-danger"> [@totalCasesRecorded]</span></span>
 								</p>
-								<p class="text-secondary"><b>Av. mins/case:</b> <span class="text-success fw-bolder"> @allowedMinutesPerCase</span></p>
-								<p class="text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes <span class="text-danger">[@totalMinutesRecorded]</span></span></p>
-								<p class="text-secondary"><b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###") <span class="text-danger"> [@totalHoursAllowedRecorded]</span></span></p>
+								<p class="text-secondary">
+									<b>Av. mins/case:</b> <span class="text-success fw-bolder"> @allowedMinutesPerCase</span>
+								</p>
+								<p class="text-secondary">
+									<b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutes <span class="text-danger">[@totalMinutesRecorded]</span></span>
+								</p>
+								<p class="text-secondary">
+									<b>Hours Allowed:</b><span class="text-success fw-bolder"> @TotalHoursAllowed.ToString("#.###") <span class="text-danger"> [@totalHoursAllowedRecorded]</span></span>
+								</p>
 							</div>
 						</div>
 
@@ -140,7 +141,6 @@
 											var departmentRoleTotalHeadCount = 0;
 											double departmentRoleHours = 0d;
 
-											//var roleTotalHours = dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber).Where(item => item.DailyRoles.Name == departmentRole).Sum(item => (double)item.DailyRolses.DailyTotalHoursOfRole);
 											foreach (var dynamicRole in dynamicObjectList.Where(item => item.WeekNumber == week.WeekNumber))
 											{
 												@for (int x = 0; x < dynamicRole.DailyRoles.Count; x++)
@@ -155,7 +155,7 @@
 
 											}
 											<tr class="text-success fw-bolder">
-												<td title="Cost Center">@week.CostCenter.Name</td>
+												<td title="Cost Center">@week!.CostCenter!.Name</td>
 												<td>@departmentRole</td>
 												<td title="Head Count">{HC} <span class="text-danger"> [@departmentRoleTotalHeadCount]</span></td>
 												<td>{Hours} <span class="text-danger">[@departmentRoleHours]</span></td>

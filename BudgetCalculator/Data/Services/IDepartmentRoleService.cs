@@ -3,7 +3,7 @@ using BudgetCalculator.Models;
 
 namespace BudgetCalculator.Data.Services;
 
-public interface IDepartmentRoleService:IEntityBaseRepository<DepartmentRoleEntity>
+public interface IDepartmentRoleService : IEntityBaseRepository<DepartmentRoleEntity>
 {
 
 	Task<IEnumerable<CostCenterEntity>> GetCostCenterDropDownValuesAsync();

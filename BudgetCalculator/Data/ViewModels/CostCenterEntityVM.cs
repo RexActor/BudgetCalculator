@@ -5,28 +5,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BudgetCalculator.Models;
 
-    public class CostCenterEntityVM 
-    {
-        [Key]
-        public int Id { get; set; }
+public class CostCenterEntityVM
+{
+	[Key]
+	public int Id { get; set; }
 
-        [DisplayName("Cost Center")]
-        [Required]
-        public string? Name { get; set; }
+	[DisplayName("Cost Center")]
+	[Required]
+	public string? Name { get; set; }
 
-        public string? Description { get; set; } = null;
+	public string? Description { get; set; } = null;
 
 
-       
 
-        [DisplayName("Department ")]
-        
-        public int DepartmentId { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
-        public string? CreatedBy { get; set; }
+	[DisplayName("Department ")]
 
-        public DateTime? LastUpdatedAt { get; set; }
-        public string? LastUpdatedBy { get; set; }
+	public int DepartmentId { get; set; }
 
-    }
+	public DateTime? CreatedAt { get; set; }
+	public string? CreatedBy { get; set; }
+
+	public DateTime? LastUpdatedAt { get; set; }
+	public string? LastUpdatedBy { get; set; }
+
+}

@@ -9,19 +9,14 @@ public interface IBudgetService : IEntityBaseRepository<BudgetEntity>
 {
 	Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync();
 	Task CreateBudget(BudgetEntityVM entity);
-
 	Task UpdateDailyBudget(DailyBudget entity);
 	Task UpdateBudget(BudgetEntityVM entity);
-	Task DeleteBudgetAsync(int year,int costCenterId);
-	Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year,int costCenterId);
-	Task<IEnumerable<WeeklyBudget>>GetWeeklyBudgetAsync(int year,int costCenterId);
+	Task DeleteBudgetAsync(int year, int costCenterId);
+	Task<BudgetEntityVM> GetByYearAndCostCenterAsync(int year, int costCenterId);
+	Task<IEnumerable<WeeklyBudget>> GetWeeklyBudgetAsync(int year, int costCenterId);
 	Task<IEnumerable<BudgetEntity>> GetAllBudgetsAsync();
-
-	
-
 	Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId);
-	Task<WeeklyBudget>GetWeeklyBudgetByIdAsync(int weeklyBudgetId);
+	Task<WeeklyBudget> GetWeeklyBudgetByIdAsync(int weeklyBudgetId);
 	Task<WeeklyBudget> GetWeeklyBudgetsByDateAsync(int weekNumber, DateTime budgetDate);
-
 	Task<IEnumerable<DailyBudget>> GetDailyBudgetByWeeklyIdAsync(int weeklyBudgetId);
 }

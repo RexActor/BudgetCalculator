@@ -20,7 +20,7 @@ public class CostCenterEntity : IEntityBase
 
 	public int DepartmentId { get; set; }
 
-	
+
 	[ForeignKey(nameof(DepartmentId))]
 	public DepartmentEntity Department { get; set; }
 

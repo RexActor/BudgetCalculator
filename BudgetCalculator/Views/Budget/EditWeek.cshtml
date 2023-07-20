@@ -4,12 +4,12 @@
 
 @{
 
-	ViewData["Title"] = "Budget View";
-	var firstDate = new DateTime(Model!.Budget!.Year - 1, 12, 31);
-	var weekComencingDate = @firstDate.AddDays((@Model.WeekNumber - 1) * 7);
-	int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName ?? default!);
-	var prevWeekDisable = "disabled";
-	var nextWeekDisable = "disabled";
+ViewData["Title"] = "Budget View";
+var firstDate = new DateTime(Model!.Budget!.Year - 1, 12, 31);
+var weekComencingDate = @firstDate.AddDays((@Model.WeekNumber - 1) * 7);
+int monthIndex = @FinanceCalendar.FinanceCalendarWeekModel.Keys.ToList().IndexOf(Model.MonthName ?? default!);
+var prevWeekDisable = "disabled";
+var nextWeekDisable = "disabled";
 }
 
 <div class="card shadow ">
@@ -27,15 +27,15 @@
 						</a>
 					</li>
 					@if (ViewBag.WeeklyBudgets is not null)
+				{
+					@foreach (var week in ViewBag.WeeklyBudgets)
 					{
-						@foreach (var week in ViewBag.WeeklyBudgets)
-						{
-							var activeLink = week.Key == Model.WeekNumber ? "active" : "";
-							<li class="page-item @activeLink">
+						var activeLink = week.Key == Model.WeekNumber ? "active" : "";
+						<li class="page-item @activeLink">
 								<a class="text-center page-link" asp-action="EditWeek" asp-route-id="@week.Value">WK @week.Key</a>
 							</li>
-						}
 					}
+				}
 
 					<li class="page-item @nextWeekDisable">
 						<a class="page-link" asp-action="EditWeek" asp-route-id="">
@@ -46,21 +46,20 @@
 			</nav>
 		</div>
 
-
 		@for (int i = 0; i < 7; i++)
-		{
-			var dayofWeek = @weekComencingDate.AddDays(i).DayOfWeek;
-			var dateOfDay = @weekComencingDate.AddDays(i).ToShortDateString();
+	{
+		var dayofWeek = @weekComencingDate.AddDays(i).DayOfWeek;
+		var dateOfDay = @weekComencingDate.AddDays(i).ToShortDateString();
 
-			var casesOfday = Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyCases).FirstOrDefault();
-			double TotalDailyMinutes = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyTotalMinutes).FirstOrDefault() * 1000) / 1000;
-			double TotalDailyHoursAllowed = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyAllowedHours).FirstOrDefault() * 1000) / 1000;
+		var casesOfday = Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyCases).FirstOrDefault();
+		double TotalDailyMinutes = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyTotalMinutes).FirstOrDefault() * 1000) / 1000;
+		double TotalDailyHoursAllowed = Math.Truncate(Model.dailyBudgets.Where(item => item.budgetDate == DateTime.Parse(dateOfDay)).Select(item => item.DailyAllowedHours).FirstOrDefault() * 1000) / 1000;
 
-			double DirectLabourTotalHoursPerDay = 0;
-			double AgencyHoursAvailable = 0;
+		double DirectLabourTotalHoursPerDay = 0;
+		double AgencyHoursAvailable = 0;
 
 
-			<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+		<div class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
 				<div class="card">
 					<div class="row bg-light g-0 ">
 						<div class="card-header">
@@ -82,10 +81,9 @@
 						<div class="col-md-6">
 							<div class="card-body">
 								@{
-									double TotalWeeklyProductiveHours = (Model.AgencyProductiveHours + Model.DirectProductiveHours);
-									double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)Model.Cases)) * 60, 3);
-
-								}
+								double TotalWeeklyProductiveHours = (Model.AgencyProductiveHours + Model.DirectProductiveHours);
+								double allowedMinutesPerCase = Math.Round(((TotalWeeklyProductiveHours / (float)Model.Cases)) * 60, 3);
+							}
 								<div class="form-floating">
 									<p class="card-text text-secondary"><b>Cases: </b><span class="text-success fw-bolder">@casesOfday</span></p>
 								</div>
@@ -108,28 +106,25 @@
 											<th>Total Hours</th>
 										</tr>
 									</thead>
+
 									<tbody>
-
 										@for (int x = 0; x < Model.dailyBudgets.Count; x++)
+									{
+										if (@Model.dailyBudgets[x].budgetDate == DateTime.Parse(dateOfDay))
 										{
-											if (@Model.dailyBudgets[x].budgetDate == DateTime.Parse(dateOfDay))
+											for (int b = 0; b < Model.dailyBudgets[x].DailyRoles.Count; b++)
 											{
-												for (int b = 0; b < Model.dailyBudgets[x].DailyRoles.Count; b++)
-												{
-
-													<tr class="text-success fw-bolder ">
+												<tr class="text-success fw-bolder ">
 														<td class="" title="Cost Center">@Model!.CostCenter!.Name</td>
 														<td class="">@Model.dailyBudgets[x].DailyRoles[b].Name</td>
 														<td class="" title="Head Count"> @Model.dailyBudgets[x].DailyRoles[b].DailyHeadCountOfRole</td>
 														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyHoursOfRole</td>
 														<td class=""> @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole  </td>
 													</tr>
-
-													DirectLabourTotalHoursPerDay += @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole;
-												}
-
+												DirectLabourTotalHoursPerDay += @Model.dailyBudgets[x].DailyRoles[b].DailyTotalHoursOfRole;
 											}
 										}
+									}
 										<tr>
 											<td></td>
 											<td class="text-end text-secondary" style="border-bottom: thin solid; border-color:gray;" colspan="2"><b>Direct Hours:</b></td>
@@ -139,16 +134,14 @@
 										</tr>
 										<tr>
 											@{
+											////AGENCY Hours available calcualted based on total Hours available - Direct labour hours available
+											///Due that budget is "fixed" there are no option to flex direct labour
+											///And in this case "holes" (shortage in requirement fullfilment) is being covered with Agency
 
-												////AGENCY Hours available calcualted based on total Hours available - Direct labour hours available
-												///Due that budget is "fixed" there are no option to flex direct labour
-												///And in this case "holes" (shortage in requirement fullfilment) is being covered with Agency
 
-
-												AgencyHoursAvailable = TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay < 0 ? 0 : TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay;
-												var AgencyHeadCount = Math.Floor(AgencyHoursAvailable / 8);
-
-											}
+											AgencyHoursAvailable = TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay < 0 ? 0 : TotalDailyHoursAllowed - DirectLabourTotalHoursPerDay;
+											var AgencyHeadCount = Math.Floor(AgencyHoursAvailable / 8);
+										}
 											<td class="text-end text-secondary" colspan="3"><b>Agency Hours:</b></td>
 											<td class="text-center"><span class="fw-bolder">@Math.Floor(AgencyHoursAvailable)</span></td>
 											<td></td>
@@ -172,13 +165,13 @@
 					</div>
 				</div>
 			</div>
-		}
+	}
 	</div>
 </div>
 
 
 @{
-	var controller = ViewContext.RouteData.Values["controller"];
+var controller = ViewContext.RouteData.Values["controller"];
 }
 @section header{
 

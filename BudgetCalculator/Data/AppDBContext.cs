@@ -18,7 +18,7 @@ public class AppDBContext : DbContext
 	public DbSet<CostCenterEntity> CostCenters { get; set; }
 	public DbSet<DepartmentEntity> Departments { get; set; }
 	public DbSet<BudgetEntity> Budgets { get; set; }
-	public DbSet<WeeklyBudget>WeeklyBudgets { get; set; }
+	public DbSet<WeeklyBudget> WeeklyBudgets { get; set; }
 	public DbSet<DepartmentRoleEntity> DepartmentRoles { get; set; }
-	public DbSet<DailyBudget> DailyBudgets { get; set;}
+	public DbSet<DailyBudget> DailyBudgets { get; set; }
 }

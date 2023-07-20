@@ -7,8 +7,8 @@ public class BudgetDropDownVM
 
 	public BudgetDropDownVM()
 	{
-		CostCenters =new List<CostCenterEntity>();  
+		CostCenters = new List<CostCenterEntity>();
 	}
 
-	public List<CostCenterEntity>    CostCenters { get; set; }
+	public List<CostCenterEntity> CostCenters { get; set; }
 }

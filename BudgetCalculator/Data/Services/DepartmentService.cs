@@ -8,6 +8,6 @@ public class DepartmentService : EntityBaseRepository<DepartmentEntity>, IDepart
 	private readonly AppDBContext _context;
 	public DepartmentService(AppDBContext context) : base(context)
 	{
-		_context= context;
+		_context = context;
 	}
 }

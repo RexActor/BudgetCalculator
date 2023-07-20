@@ -42,28 +42,28 @@ var maxYear = 2030;
 	<tr class="table-dark">
 		<th>Month</th>
 		@for (int i = year; i <= maxYear; i++)
-	{
-		<th>@i</th>
-	}
+{
+	<th>@i</th>
+}
 	</tr>
 
 	@for (int x = 1; x <= 12; x++)
 {
-	var nextYear = year;
-	var month = new DateTime(nextYear, x, 1).ToString("MMMM", CultureInfo.InvariantCulture);
+var nextYear = year;
+var month = new DateTime(nextYear, x, 1).ToString("MMMM", CultureInfo.InvariantCulture);
 	<tr>
 			<td class="table-dark fw-bold">@month</td>
 			
 			@for (int y = nextYear; y <= maxYear; y++)
-		{
-			//@FinanceCalendar.FinanceCalendarWeekModel.TryGetValue(month,out int val)
-			<td class="table-success border-1 border-bottom border-dark">
+	{
+		//@FinanceCalendar.FinanceCalendarWeekModel.TryGetValue(month,out int val)
+		<td class="table-success border-1 border-bottom border-dark">
 					<p>Dynamic: @FinanceCalendar.GetWeeksPerMonth(y, x)</p>
 					
 					<p>Fixed: @FinanceCalendar.FinanceCalendarWeekModel[month]</p>
 					</td>
 
-		}
+	}
 		</tr>
 }
 

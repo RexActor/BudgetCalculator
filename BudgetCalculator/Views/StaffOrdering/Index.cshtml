@@ -1,96 +1,51 @@
 ﻿@model OrderStaffEntity;
 
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
 <h1>This is staff ordering page FOR NEXT DAY</h1>
-
 
 <form asp-action="OrderStaff" method="post">
 	<div class="container shadow">
-
 		<div class="col-md-6 m-3 g-0">
-
 			<div class="row mb-2 mt-3">
-
 				<label class="col-form-label col-2">Week:</label>
 				<div class="col-auto">
-
 					<select id="weekSelectBox" onchange="SelectBoxChange()" class="form-select">
 						<option selected disabled>--SELECT---</option>
 						@for (int i = 1; i < 52; i++)
-						{
-							<option value="@i">Wk @i</option>
-						}
+					{
+						<option value="@i">Wk @i</option>
+					}
 					</select> <span class="text-danger fw-bold">This probably will be removed</span>
-
-
 				</div>
-
 			</div>
 
-
-
 			<div class="row mb-2">
-
 				<label class="col-form-label col-2">Date:</label>
 				<div class="col-auto">
-
-
 					<input asp-for="OrderDate" type="date" class="form-control" value="@DateTime.Today.AddDays(1).Date.ToString("yyyy-MM-dd")" />
-
-
 				</div>
 
 			</div>
 			<div class="row mb-2">
-
 				<label class="col-form-label col-2">Outbound:</label>
 				<div class="col-auto">
-
-
 					<input asp-for="OutboundQuantity" type="number" class="form-control" placeholder="volume in cases" />
-
-
 				</div>
-
 			</div>
-			<div class="row mb-2">
 
+			<div class="row mb-2">
 				<label class="col-form-label col-2">Packing Plan:</label>
 				<div class="col-auto">
-
-
 					<input asp-for="ProducingQuantiy" type="number" class="form-control" placeholder="volume in cases" />
-
-
 				</div>
-
 			</div>
-
-
 		</div>
-
-
 
 		<div class="row g-0 ">
 			<div class="m-3">
 				<input type="submit" value="Continue" class="btn btn-outline-primary" />
-
 			</div>
-
-
 		</div>
-
-
-
-
-
 	</div>
-
-
 </form>
 
 
@@ -98,19 +53,12 @@
 	<script type="text/javascript">
 
 		function SelectBoxChange() {
-
 			var selectBox = document.getElementById("weekSelectBox");
 			var item = selectBox.value; // returns inly {i} EG 1
 			var text = selectBox.options[selectBox.selectedIndex].text; // returns text value WK {i} EG WK 1
-
 			var targetInput = document.getElementById("updateInputField");
 			var calculationField = document.getElementById("selectedWeekSpan");
 			calculationField.innerText = item;
-
 		}
-
-
-
-
 	</script>
 }

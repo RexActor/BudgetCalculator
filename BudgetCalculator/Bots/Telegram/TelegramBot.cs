@@ -22,9 +22,9 @@ public class TelegramBot
 	TelegramBotClient botClient;
 	private readonly ILogger<TelegramService> _logger;
 	public ChatId ChannelID { get; set; }
-	
 
-	
+
+
 
 
 	public TelegramBot(IConfiguration configuration, ILogger<TelegramService> logger)
@@ -51,20 +51,20 @@ public class TelegramBot
 			cancellationToken: cts.Token);
 
 		var me = await botClient.GetMeAsync();
-		
+
 		_logger.LogInformation($"Start listening for @{me.Username}");
 
 	}
 
 	public async Task sendMessageAsync(ChatId chatID, string message)
 	{
-		
+
 		await botClient.SendTextMessageAsync(chatID, message);
 
 	}
 
 
-	
+
 
 
 
@@ -97,22 +97,22 @@ public class TelegramBot
 
 		if (update is null) { return; }
 
-		
-		
+
+
 
 		var channelPost = update.ChannelPost;
 		if (channelPost is not null)
 		{
-	
-			
+
+
 			var channelPostText = channelPost.Text;
 			var chatId = channelPost.Chat.Id;
 			var channelName = channelPost.Chat.Title;
 			this.ChannelID = chatId;
 			_logger.LogInformation($"Received a '{channelPostText}' message in {channelName} with ID {chatId}");
-		
-			
-			
+
+
+
 			Message sentMessage = await botClient.SendTextMessageAsync(chatId,
 				text: $"AUTHOR! Yeey. I'm a LIVE in CHANNEL {channelName}",
 				cancellationToken: cancellationToken);
@@ -126,7 +126,7 @@ public class TelegramBot
 		{
 			var messageText = message.Text;
 			var chatId = message.Chat.Id;
-			
+
 			var replyMessage = string.Empty;
 
 			_logger.LogInformation($"Received a '{messageText}' message in chat {chatId}");
@@ -137,8 +137,8 @@ public class TelegramBot
 				var keyboard = new InlineKeyboardMarkup(
 					InlineKeyboardButton.WithUrl("Join!!!", "https://t.me/+abvyOpD-Rsc4ODk0"));
 				Message sentMessage = await botClient.SendTextMessageAsync(chatId, "Please Join private chat for updates\n", replyMarkup: keyboard);
-				
-				
+
+
 			}
 			else
 			{
@@ -149,7 +149,7 @@ public class TelegramBot
 					cancellationToken: cancellationToken);
 			}
 
-			
+
 
 		}
 
