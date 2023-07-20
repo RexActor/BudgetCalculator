@@ -18,4 +18,6 @@ public class DailyBudget : IEntityBase
 	public double MonthlyMinutesPerCase { get; set; }
 	public double DailyTotalMinutes { get; set; }
 
+	public DateTime UpdatedDate { get; set; }
+
 }

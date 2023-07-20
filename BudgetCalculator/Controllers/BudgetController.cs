@@ -82,18 +82,27 @@ public class BudgetController : Controller
 		List<dynamic> dynamicObjectList = new List<dynamic>();
 		List<DailyBudget> dailyBudgets = new List<DailyBudget>();
 		var selectedWeek = weeklyBudgets.Where(item => item.MonthName == monthName);
-
+		DateTime uploadingDate = new DateTime();
 		foreach (var item in selectedWeek)
 		{
 
 			var dbuget = await _service.GetDailyBudgetByWeeklyIdAsync(weeklyBudgetId: item.Id);
 
-			dbuget.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == CostCenterId).ToList().ForEach(subitem =>
+
+
+			dbuget.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == CostCenterId).OrderBy(item=>item.budgetDate).ThenByDescending(item=>item.UpdatedDate).ToList().ForEach(subitem =>
 			{
-				if (!dailyBudgets.Contains(subitem))
+
+
+				if (!dailyBudgets.Contains(subitem) && uploadingDate != subitem.budgetDate)
 				{
+
 					dailyBudgets.Add(subitem);
+					
+
 				}
+				uploadingDate = subitem.budgetDate;
+
 			});
 		}
 
@@ -342,6 +351,7 @@ public class BudgetController : Controller
 		}
 
 		IEnumerable<DailyBudget> dailyBudgetsList = await _service.GetDailyBudgetByWeeklyIdAsync(weekBudget.Id);
+
 		Dictionary<int, int> MonhtlyWeeks = new Dictionary<int, int>();
 
 		var weeklyBudgets = await _service.GetWeeklyBudgetAsync(year: weekBudget!.Budget!.Year, costCenterId: weekBudget!.CostCenter!.Id);
@@ -372,7 +382,7 @@ public class BudgetController : Controller
 
 			WeekNumber = weekBudget!.WeekNumber,
 			Budget = weekBudget!.Budget,
-			dailyBudgets = dailyBudgetsList.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == weekBudget.CostCenter.Id).ToList(),
+			dailyBudgets = dailyBudgetsList.Where(item => item!.WeeklyBudgets!.CostCenter!.Id == weekBudget.CostCenter.Id).OrderBy(item => item.UpdatedDate).TakeLast(1).ToList(),
 			DirectProductiveHours = weekBudget!.DirectProductiveHours,
 			AgencyProductiveHours = weekBudget.AgencyProductiveHours,
 			Cases = weekBudget.Cases,
@@ -410,6 +420,8 @@ public class BudgetController : Controller
 		dailyBudget.budgetDate = DateTime.Parse(date);
 		dailyBudget.DailyAllowedHours = 0;
 		dailyBudget.WeeklyBudgets = weeklyBudgets;
+		dailyBudget.UpdatedDate = DateTime.Now.Date;
+
 
 		dailyBudget.DailyRoles = new List<DailyRolesData>();
 		roleNames.ForEach(role =>

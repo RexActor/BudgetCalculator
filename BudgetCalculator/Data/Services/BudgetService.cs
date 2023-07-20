@@ -134,7 +134,13 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 
 	public async Task<IEnumerable<DailyBudget>> GetDailyBudgetByWeeklyIdAsync(int weeklyBudgetId)
 	{
-		return await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item!.CostCenter).ThenInclude(item => item!.Department).Include(item => item.DailyRoles).ToListAsync();
+		var result = await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item!.CostCenter).ThenInclude(item => item!.Department).Include(item => item.DailyRoles).ToListAsync();
+
+	
+
+
+
+		return result;
 	}
 
 	public async Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId)
