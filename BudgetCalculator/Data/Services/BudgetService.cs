@@ -97,6 +97,8 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 		return result;
 	}
 
+	
+
 	public async Task<BudgetDropDownVM> GetBudgetDropDownValuesAsync()
 	{
 		var response = new BudgetDropDownVM()
@@ -142,7 +144,7 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 
 	public async Task<IEnumerable<DailyBudget>> GetDailyBudgetByWeeklyIdAsync(int weeklyBudgetId)
 	{
-		return await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item.CostCenter).ThenInclude(item => item.Department).Include(item=>item.DailyRoles).ToListAsync();
+		return await _context.DailyBudgets.Include(item => item.WeeklyBudgets).ThenInclude(item => item.CostCenter).ThenInclude(item => item.Department).Include(item => item.DailyRoles).ToListAsync();
 	}
 
 	public async Task<IEnumerable<DepartmentRoleEntity>> GetDepartmentRolesAsync(int costCenterId)
@@ -162,7 +164,7 @@ public class BudgetService : EntityBaseRepository<BudgetEntity>, IBudgetService
 		return await _context.WeeklyBudgets.Include(item => item.Budget).ThenInclude(item => item!.CostCenter).ThenInclude(item => item.Department).Where(item => item.Id == weeklyBudgetId).FirstOrDefaultAsync() ?? default!;
 	}
 
-	public async Task<WeeklyBudget> GetWeeklyBudgetsByDateAsync(int weekNumber,DateTime budgetDate)
+	public async Task<WeeklyBudget> GetWeeklyBudgetsByDateAsync(int weekNumber, DateTime budgetDate)
 	{
 		return await _context.WeeklyBudgets.Include(item => item.Budget).ThenInclude(item => item!.CostCenter).ThenInclude(item => item.Department).Where(item => item.WeekNumber == weekNumber).FirstOrDefaultAsync() ?? default!;
 	}

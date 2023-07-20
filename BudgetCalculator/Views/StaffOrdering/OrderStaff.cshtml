@@ -1,0 +1,226 @@
+﻿@model BudgetCalculator.Data.ViewModels.OrderStaffVM;
+@using System.Globalization;
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	var dailyVolume = 0;
+}
+<h1>This is next page for staff ordering....</h1>
+
+
+
+<p>We are producing @Model.ProducingQuantiy;</p>
+<p>We are outloading @Model.OutboundQuantity</p>
+<p>Affected Cost Centers:</p>
+<div class="container">
+	<div class="row">
+		@foreach (var costCenter in Model.BudgetEntity)
+		{
+			var divIdName = $"container{costCenter.CostCenter.Id}";
+			var totalHoursName = $"TotalHours{costCenter.CostCenter.Id}";
+
+			<div id="@divIdName" class="col-md-5 col-xs-6 border-primary mb-3 g-3" style="font-size:14px;">
+				<div class="card">
+					<div class="row bg-light g-0 ">
+						<div class="card-header">
+							<h3 class="text-center card-title ">
+								<span class="fw-bolder"> @costCenter.CostCenter.Department.Name</span>
+								<span class="fs-5 fw-bolder text-secondary text-decoration-underline">@costCenter.CostCenter.Name</span>
+
+							</h3>
+						</div>
+
+						<div class="col-md-6">
+							<div class="card-body">
+
+								<p class="card-text text-secondary"><b>date:</b> <span class="text-success fw-bolder">@Model.OrderDate.ToShortDateString() </span> </p>
+
+								<p class="card-text text-secondary"><b>Month:</b> <span class="text-success fw-bolder">@costCenter.MonthName </span></p>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="card-body">
+								@{
+
+								}
+								<div class="form-floating">
+
+									@if (costCenter.CostCenter.Department.Name == "Warehouse")
+									{
+										dailyVolume = @Model.OutboundQuantity;
+									}
+									else
+									{
+										dailyVolume = @Model.ProducingQuantiy;
+									}
+
+									@{
+
+										var MonthlyMinsPerCase = Math.Round((((double)costCenter.DirectProductiveHours + costCenter.AgencyProductiveHours) / costCenter.Cases) * 60, 4);
+										var TotalMinutesPerDay = Math.Round((double)MonthlyMinsPerCase * dailyVolume, 4);
+										var TotalHoursPerDay = Math.Round(TotalMinutesPerDay / 60, 4);
+									}
+
+									<p class="card-text text-secondary"><b>Volume:</b><span class="text-success fw-bolder"> @dailyVolume</span></p>
+
+								</div>
+								<p class="card-text text-secondary"><b>Av. Monthly mins/case:</b><span class="text-success fw-bolder"> @MonthlyMinsPerCase</span></p>
+								<p class="card-text text-secondary"><b>Total Minutes:</b><span class="text-success fw-bolder"> @TotalMinutesPerDay</span></p>
+								<p class="card-text text-secondary "><b>Hours Allowed:</b> <span class="text-success fw-bolder">@TotalHoursPerDay</span></p>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<p class="text-decoration-underline"><b>DIRECT HC Only Input</b></p>
+								<span hidden class="totalHoursAvailable" id="totalHoursAvailable">@TotalHoursPerDay</span>
+								<table class="table table-borderless text-center">
+									<thead>
+										<tr class="table-bordered text-secondary" style="border-bottom: thin solid; border-color:gray;">
+											<th>Direct Role</th>
+											<th title="Head Count">HC</th>
+											<th>Hrs shift/person</th>
+											<th>Total Hours</th>
+
+										</tr>
+									</thead>
+
+									<tbody>
+
+
+										@foreach (var role in Model.Roles)
+										{
+											if (role.CostCenterId == costCenter.CostCenter.Id)
+											{
+												<tr class="text-success fw-bolder ">
+													@{
+														var inputName = $"input{role.Id}";
+														var secondInput = $"inpu2{role.Id}";
+														var spanName = $"span{role.Id}";
+													}
+
+													<td class="">@role.Name</td>
+													<td class="" title="Head Count">
+
+														<input id="@inputName" class="form-control m-auto input" type="number" placeholder="0" style="width:80px;" oninput="updateValue('@inputName','@secondInput', '@spanName','@divIdName','@totalHoursName')">
+													</td>
+													<td class="">
+
+														<input id="@secondInput" class="form-control input  m-auto" type="number" placeholder="0" style="width:80px;" oninput="updateValue('@inputName','@secondInput', '@spanName','@divIdName','@totalHoursName')">
+													</td>
+													<td><span class="totalHours" id="@spanName"></span></td>
+
+												</tr>
+											}
+
+										}
+
+										<tr>
+
+											<td colspan="2" class="text-end fw-bolder text-secondary">Total IPL Hours:</td>
+											<td colspan="2" class="text-end fw-bolder text-secondary"><span class="total-direct-hours-allocated"></span></td>
+										</tr>
+										<tr>
+
+											<td colspan="2" class="text-end fw-bolder text-secondary">Agency Hours:</td>
+											<td colspan="2" class="text-end fw-bolder text-secondary"><span class="final-agency-hours-available"></span></td>
+										</tr>
+										<tr>
+											<td colspan="2" class="text-end fw-bolder text-secondary">Av. Agency Heads:</td>
+											<td colspan="2" class="text-end fw-bolder text-secondary"><span class="final-agency-heads-available"></span></td>
+
+
+										</tr>
+
+
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div class="card-footer g-0 text-end text-muted" style="font-size:0.8rem;">
+							<span>
+								Last Updated: @DateTime.Now.ToLongDateString() by {User}
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@section Scripts{
+	<script type="text/javascript">
+
+		document.addEventListener('input', function (event) {
+			if (event.target.classList.contains('input')) {
+				updateSum(event.target.closest('div'));
+			}
+		});
+
+
+
+		function updateSum(divElement) {
+			const spanElements = divElement.getElementsByClassName('totalHours');
+			let sum = 0;
+
+			for (const span of spanElements) {
+				const value = parseInt(span.innerText);
+				sum += isNaN(value) ? 0 : value;
+			}
+
+			const sumSpan = divElement.querySelector('.total-direct-hours-allocated');
+			sumSpan.innerText = `${sum}`;
+
+
+			updateAgency(sum, divElement)
+		}
+
+
+		function updateValue(inputId, input2Id, spanId, divIdName, totalHoursName) {
+
+			const userInput = document.getElementById(inputId).value;
+			const userSecondInput = document.getElementById(input2Id).value;
+			result = userInput * userSecondInput;
+
+
+
+			document.getElementById(spanId).innerText = result;
+
+
+		}
+
+		function updateAgency(directHours, targetDiv) {
+
+			const hoursAvailable = targetDiv.getElementsByClassName('totalHoursAvailable');
+			//const hoursAvailable = document.getElementById('totalHoursAvailable')
+
+			let sum = 0;
+
+			for (const span of hoursAvailable) {
+				const value = parseFloat(span.innerText);
+				sum = isNaN(value) ? 0 : value;
+			}
+
+			let AgencyHoursLeft = Math.floor(sum - directHours) < 0 ? 0 : Math.floor(sum - directHours);
+
+
+
+
+			let AgencyHeadsAvailable = Math.floor(AgencyHoursLeft / 8);
+
+
+			directHours > sum ? targetDiv.querySelector('.total-direct-hours-allocated').style.color = "red" : targetDiv.querySelector('.total-direct-hours-allocated').style.color = "green";
+
+
+
+			targetDiv.querySelector('.final-agency-hours-available').innerText = AgencyHoursLeft;
+			targetDiv.querySelector('.final-agency-heads-available').innerText = AgencyHeadsAvailable;
+
+		}
+
+	</script>
+}
